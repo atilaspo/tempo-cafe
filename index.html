@@ -1,517 +1,1459 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tempo Café — Buenos Aires</title>
-  <meta name="description" content="Café de especialidad y cocina artesanal de producción propia. Dentro del studio de danza. Gral. Juan Domingo Perón 1467, Buenos Aires." />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tempo Café — Café de especialidad · Buenos Aires</title>
+<style>
+  /* Real brand fonts (self-hosted) */
+  @font-face{font-family:'Bespoke Serif';src:url('assets/fonts/BespokeSerif-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:'Bespoke Serif';src:url('assets/fonts/BespokeSerif-Light.woff2') format('woff2');font-weight:300;font-style:normal;font-display:swap}
+  @font-face{font-family:'Bespoke Serif';src:url('assets/fonts/BespokeSerif-Italic.woff2') format('woff2');font-weight:400;font-style:italic;font-display:swap}
+  @font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Light.woff2') format('woff2');font-weight:300;font-style:normal;font-display:swap}
+  @font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+  @font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Medium.woff2') format('woff2');font-weight:500 700;font-style:normal;font-display:swap}
+  :root{
+    --gold:#c9b779;
+    --sage:#95a47a;
+    --forest:#2d3a1f;
+    --forest-2:#26321d;
+    --amber:#bf8233;
+    --amber-soft:#d68a32;
+    --black:#232322;
+    --cream:#f4f4ed;
+    --cream-2:#E7E2D7;
+    --ink:#232322;
+    --serif:'Bespoke Serif', Georgia, serif;
+    --sans:'Satoshi', system-ui, sans-serif;
+    --container:1280px;
+    --pad:clamp(22px, 5vw, 64px);
+    --radius-pill:0;
+    --radius-control:0;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans);
+    background:var(--cream);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+
+  .wrap{max-width:var(--container);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+
+  /* ---------- LOADER ---------- */
+  .site-loader{
+    position:fixed;
+    inset:0;
+    z-index:999;
+    display:grid;
+    place-items:center;
+    background:var(--cream);
+    color:var(--forest);
+    transition:opacity .7s ease, visibility .7s ease;
+  }
+  .site-loader.is-hidden{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+  }
+  .site-loader__inner{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+  }
+  .site-loader__personaje{
+    width:clamp(116px,18vw,190px);
+    height:auto;
+    animation:loaderFloat 1.8s ease-in-out infinite;
+  }
+  .site-loader__line{
+    width:82px;
+    height:1px;
+    overflow:hidden;
+    background:rgba(45,58,31,.16);
+  }
+  .site-loader__line::before{
+    content:"";
+    display:block;
+    width:42%;
+    height:100%;
+    background:var(--amber);
+    animation:loaderLine 1.15s ease-in-out infinite;
+  }
+  .site-loader__text{
+    font-size:10px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--amber);
+    font-weight:700;
+  }
+  @keyframes loaderFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  @keyframes loaderLine{0%{transform:translateX(-110%)}100%{transform:translateX(250%)}}
+
+  .eyebrow{
+    font-family:var(--sans);
+    font-weight:500;
+    font-size:12px;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+  }
+  .serif{font-family:var(--serif)}
+  .italic{font-style:italic}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px var(--pad);
+    transition:transform .45s cubic-bezier(.4,0,.2,1), background-color .4s ease, padding .4s ease, border-color .4s ease;
+    border-bottom:1px solid transparent;
+  }
+  .nav--solid{
+    background:rgba(244,244,237,.96);
+    border-bottom:1px solid rgba(45,58,31,.12);
+    padding-top:13px;padding-bottom:13px;
+    box-shadow:0 10px 34px -30px rgba(45,58,31,.52);
+  }
+  .nav--hidden{transform:translateY(-105%)!important}
+
+  .brand{display:block;line-height:0}
+  .logo-cream{display:block;object-fit:contain}
+  .brand .logo-cream{width:98px;height:54px}
+
+  .nav-links{display:flex;align-items:center;gap:34px}
+  .nav-links a.link{
+    font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;
+    color:var(--ink);opacity:.82;position:relative;padding:4px 0;
+    transition:opacity .25s ease;
+  }
+  .nav-links a.link::after{
+    content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--amber);
+    transition:right .35s cubic-bezier(.4,0,.2,1);
+  }
+  .nav-links a.link:hover{opacity:1}
+  .nav-links a.link:hover::after{right:0}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;
+    font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    cursor:pointer;border:none;transition:all .3s ease;
+    border-radius:0;
+  }
+  .btn-amber{background:var(--amber);color:#fff;padding:13px 22px;box-shadow:0 12px 28px -24px rgba(35,35,34,.65)}
+  .btn-amber:hover{background:var(--forest);color:var(--cream);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:var(--forest);border:1px solid rgba(45,58,31,.24);padding:13px 22px}
+  .btn-ghost:hover{background:var(--cream);border-color:var(--amber);color:var(--amber);transform:translateY(-2px)}
+  .nav .menu-toggle{
+    display:none;
+    width:42px;
+    height:42px;
+    border:1px solid rgba(45,58,31,.16);
+    border-radius:var(--radius-control);
+    background:var(--cream);
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:5px;
+    cursor:pointer;
+    box-shadow:0 12px 30px -24px rgba(35,35,34,.6);
+  }
+  .menu-toggle span{
+    width:20px;
+    height:1.5px;
+    background:var(--forest);
+    transition:transform .25s ease, opacity .25s ease;
+  }
+  .menu-toggle.is-open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .menu-toggle.is-open span:nth-child(2){opacity:0}
+  .menu-toggle.is-open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;min-height:100svh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;
+    padding:140px var(--pad) 80px;overflow:hidden;
+    background:var(--cream);
+  }
+  .diamonds{
+    position:absolute;inset:-10%;
+    background-image:
+      repeating-linear-gradient(45deg, var(--forest) 0 1px, transparent 1px 58px),
+      repeating-linear-gradient(-45deg, var(--forest) 0 1px, transparent 1px 58px);
+    background-size:58px 58px;
+    opacity:.05;pointer-events:none;
+  }
+  .hero::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 72% 62% at 50% 45%, transparent 45%, rgba(244,244,237,.65) 100%);
+  }
+  [data-parallax]{--py:0px;will-change:transform}
+  .hero-inner{position:relative;z-index:2;max-width:920px}
+  .logo-lockup{display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:26px}
+  .logo-lockup .lk-top{font-size:13px;letter-spacing:.5em;text-transform:uppercase;color:var(--sage);font-weight:500;padding-left:.5em}
+  .hero-logo{width:min(560px,84vw);height:calc(min(560px,84vw) / 1.824);margin:6px 0}
+  .logo-rule{display:flex;align-items:center;gap:16px;color:var(--sage);margin-top:8px}
+  .logo-rule .ln{width:54px;height:1px;background:currentColor;opacity:.55}
+  .logo-rule .dot{width:5px;height:5px;background:var(--amber);transform:rotate(45deg)}
+
+  .hero-tagline{
+    font-family:var(--serif);font-style:italic;font-weight:300;
+    font-size:clamp(22px,3.4vw,38px);line-height:1.3;margin:30px auto 22px;max-width:18ch;
+    color:var(--forest);text-wrap:balance;
+  }
+  .hero-sub{color:var(--amber);font-weight:600;letter-spacing:.2em;font-size:13px;text-transform:uppercase}
+  .hero-addr{margin-top:14px;color:rgba(34,41,26,.6);font-size:13.5px;letter-spacing:.04em}
+  .hero-note{margin-top:18px;color:var(--sage);font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500}
+  .hero-inner{
+    opacity:1;
+    transform:none;
+  }
+
+  /* floating engravings */
+  .engrave{position:absolute;opacity:.48;z-index:1;pointer-events:none;mix-blend-mode:multiply}
+  .engrave img{width:100%;height:auto;display:block}
+  .engrave img{filter:brightness(0) saturate(100%) invert(18%) sepia(18%) saturate(899%) hue-rotate(41deg) brightness(88%) contrast(88%)}
+  .diamonds{transform:translate3d(0,var(--py),0)}
+  .eng-clock{width:clamp(96px,11vw,158px);top:16%;left:7%;transform:translate3d(0,var(--py),0) rotate(-4deg)}
+  .eng-croissant{width:clamp(120px,14vw,200px);bottom:14%;right:6%;opacity:.42;transform:translate3d(0,var(--py),0) rotate(6deg)}
+  .eng-stamp{width:clamp(80px,8vw,120px);bottom:18%;left:10%;opacity:.62;transform:translate3d(0,var(--py),0) rotate(-4deg)}
+  .eng-bread{width:clamp(82px,9vw,132px);top:22%;right:11%;opacity:.5;transform:translate3d(0,var(--py),0) rotate(7deg)}
+
+  .scroll-cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:2;
+    display:flex;align-items:center;justify-content:center;color:var(--forest);width:44px;height:54px}
+  .scroll-cue .tempo-cue{
+    position:relative;
+    width:34px;
+    height:46px;
+    display:block;
+  }
+  .scroll-cue .tempo-cue::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:2px;
+    width:9px;
+    height:9px;
+    background:var(--amber);
+    transform:translateX(-50%) rotate(45deg);
+    animation:tempoCueDiamond 1.8s ease-in-out infinite;
+  }
+  .scroll-cue .tempo-cue::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:17px;
+    width:1px;
+    height:25px;
+    background:linear-gradient(to bottom, rgba(45,58,31,.5), rgba(45,58,31,0));
+    transform:translateX(-50%);
+    transform-origin:top;
+    animation:tempoCueLine 1.8s ease-in-out infinite;
+  }
+  @keyframes tempoCueDiamond{0%,100%{opacity:.45;transform:translate(-50%,0) rotate(45deg)}45%{opacity:1;transform:translate(-50%,7px) rotate(45deg)}}
+  @keyframes tempoCueLine{0%,100%{opacity:.35;transform:translateX(-50%) scaleY(.68)}45%{opacity:.8;transform:translateX(-50%) scaleY(1)}}
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  section{position:relative}
+  .sec-light{background:var(--cream);color:var(--black)}
+  .sec-dark{background:var(--forest);color:var(--cream)}
+  .sec-black{background:var(--black);color:var(--cream)}
+  .sec-pad{padding:clamp(80px,11vw,150px) 0}
+
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-bottom:clamp(42px,6vw,74px)}
+  .sec-head .lbl{display:flex;align-items:center;gap:14px;color:var(--amber);font-weight:600}
+  .sec-head .lbl .num{width:7px;height:7px;background:var(--amber);transform:rotate(45deg)}
+  .sec-title{font-family:var(--serif);font-weight:400;font-size:clamp(38px,6vw,76px);line-height:1.02;letter-spacing:-.01em;max-width:14ch}
+  .sec-light .sec-title{color:var(--forest)}
+  .sec-intro{max-width:34ch;font-size:16px;line-height:1.6;opacity:.75;text-wrap:pretty}
+  #menu{padding:clamp(44px,5vw,62px) 0}
+  .menu-head{align-items:center;margin-bottom:clamp(26px,3vw,40px)}
+  .menu-title{max-width:15.5ch}
+  .menu-title__line{white-space:nowrap}
+
+  /* ---------- NOSOTROS ---------- */
+  .about-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(40px,7vw,96px);align-items:center}
+  .about-copy h3{font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,42px);line-height:1.15;color:var(--forest);margin-bottom:24px;text-wrap:balance}
+  .about-copy p{font-size:16.5px;line-height:1.72;color:#3c4734;margin-bottom:18px;max-width:52ch}
+  .about-copy p strong{color:var(--amber);font-weight:700}
+  .founders{display:flex;gap:18px;margin-top:34px;flex-wrap:wrap}
+  .founder{display:flex;flex-direction:column;gap:2px}
+  .founder .fn{font-family:var(--serif);font-style:italic;font-size:21px;color:var(--forest)}
+  .founder .fr{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--sage);font-weight:600}
+  .about-photos{position:relative;width:100%;max-width:480px;aspect-ratio:4/5;min-height:380px;margin-left:auto}
+  .about-photos[data-parallax]{transform:translate3d(0,var(--py),0)}
+  .about-photos image-slot{position:absolute;box-shadow:0 28px 60px -28px rgba(45,58,31,.55)}
+  .ph-solo{inset:0;width:100%;height:100%;border:8px solid #fff}
+  .about-photos .pmark{
+    position:absolute;
+    z-index:3;
+    bottom:-16px;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--amber);
+    color:var(--cream);
+    font-family:var(--sans);
+    font-style:normal;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    padding:11px 18px;
+    border:1px solid rgba(45,58,31,.08);
+    border-radius:0;
+    box-shadow:0 14px 30px -22px rgba(35,35,34,.68);
+    white-space:nowrap;
+  }
+
+  /* ---------- MENÚ ---------- */
+  .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .m-card{
+    position:relative;background:#fff;border:1px solid rgba(45,58,31,.12);
+    overflow:hidden;cursor:pointer;transition:background .45s ease, border-color .45s ease, transform .45s ease;
+    display:flex;flex-direction:column;
+  }
+  .m-card image-slot{width:100%;height:230px;display:block;transition:opacity .45s ease}
+  .m-card .m-body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:7px;transition:color .45s ease}
+  .m-top{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+  .m-card h4{font-family:var(--serif);font-weight:400;font-size:25px;line-height:1.05;color:var(--forest)}
+  .m-price{font-family:var(--serif);font-size:22px;color:var(--amber);white-space:nowrap;transition:color .45s ease}
+  .m-desc{font-size:13.5px;line-height:1.55;color:#52614a;transition:color .45s ease;max-width:34ch}
+  .m-tag{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--sage);font-weight:600;margin-top:2px;transition:color .45s ease}
+  .m-card:hover{background:var(--amber);border-color:var(--amber);transform:translateY(-4px)}
+  .m-card:hover h4,.m-card:hover .m-price,.m-card:hover .m-desc,.m-card:hover .m-tag{color:var(--forest)}
+  .m-card:hover .m-desc{color:rgba(45,58,31,.82)}
+  .m-card:hover image-slot{opacity:.92}
+  .menu-foot{margin-top:46px;display:flex;align-items:center;justify-content:center;gap:18px;color:rgba(34,41,26,.55);font-size:13px;letter-spacing:.04em}
+  .menu-foot .ln{width:40px;height:1px;background:rgba(45,58,31,.22)}
+  .menu-teaser{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:clamp(18px,2vw,28px);
+    align-items:stretch;
+    min-height:0;
+  }
+  .menu-teaser::before{
+    content:"";
+    position:absolute;
+    width:58%;
+    height:62%;
+    right:8%;
+    top:12%;
+    border:1px solid rgba(191,130,51,.28);
+    pointer-events:none;
+  }
+  .mt-card{
+    position:relative;
+    min-height:clamp(300px,38svh,360px);
+    margin:0;
+    overflow:hidden;
+    background:#fff;
+    cursor:pointer;
+    box-shadow:0 26px 60px -34px rgba(45,58,31,.58);
+    transition:transform .45s cubic-bezier(.4,0,.2,1), box-shadow .45s ease;
+  }
+  .mt-card:hover{transform:translateY(-8px);box-shadow:0 34px 76px -38px rgba(45,58,31,.7)}
+  .mt-card::after{content:none}
+  .mt-card--hero{min-height:clamp(300px,38svh,360px)}
+  .mt-side{display:contents}
+  .mt-side .mt-card{min-height:clamp(300px,38svh,360px)}
+  .mt-photo{width:100%;height:100%;display:block}
+  .mt-carousel{
+    position:absolute;
+    inset:0;
+    z-index:1;
+  }
+  .mt-carousel img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    opacity:0;
+    transform:none;
+    transition:opacity .55s ease;
+  }
+  .mt-carousel img.is-active{opacity:1;transform:none}
+  .mt-card figcaption,
+  .taste-card figcaption{
+    position:absolute;
+    left:18px;
+    right:18px;
+    bottom:18px;
+    z-index:3;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    color:var(--forest);
+    background:var(--cream);
+    border:1px solid rgba(45,58,31,.12);
+    border-radius:0;
+    padding:12px 14px;
+    box-shadow:0 16px 34px -30px rgba(35,35,34,.62);
+  }
+  .mt-card figcaption strong,
+  .taste-card figcaption strong{font-family:var(--serif);font-size:clamp(20px,2.1vw,28px);font-weight:400;line-height:1;color:var(--forest)}
+  .mt-card figcaption span,
+  .taste-card figcaption span{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:700;white-space:nowrap}
+  .menu-preview{
+    display:contents;
+  }
+  .taste-card{
+    position:relative;
+    min-height:clamp(300px,38svh,360px);
+    margin:0;
+    overflow:hidden;
+    background:#fff;
+    cursor:pointer;
+    box-shadow:0 26px 60px -34px rgba(45,58,31,.58);
+    transition:transform .45s cubic-bezier(.4,0,.2,1), box-shadow .45s ease;
+  }
+  .taste-card:hover{transform:translateY(-6px);box-shadow:0 34px 76px -38px rgba(45,58,31,.7)}
+  .taste-card::after{content:none}
+  .btn-carta{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;
+    background:var(--amber);color:#fff;padding:18px 42px;border-radius:0;cursor:pointer;transition:all .3s ease;box-shadow:0 18px 38px -30px rgba(35,35,34,.7)}
+  .btn-carta:hover{background:var(--forest);color:var(--cream);transform:translateY(-2px)}
+  .btn-ghost-light{background:transparent;color:var(--cream);border:1px solid rgba(244,244,237,.34);padding:13px 22px;border-radius:0}
+  .btn-ghost-light:hover{background:rgba(244,244,237,.08);border-color:var(--amber);color:var(--amber)}
+
+  /* ---------- GUARDA (cenefa arlequín — rombos completos) ---------- */
+  .guarda{
+    height:74px;
+    background-color:var(--forest);
+    background-image:url('assets/cenefa-rombos.svg');
+    background-repeat:repeat-x;
+    background-position:center;
+    background-size:auto 74px;
+  }
+  @media (max-width:680px){ .guarda{height:54px;background-size:auto 54px} }
+  /* full categorized menu board */
+  .menu-divider{display:flex;align-items:center;gap:18px;margin:clamp(58px,7vw,88px) 0 40px;color:var(--amber)}
+  .menu-divider .t{font-size:12px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;white-space:nowrap}
+  .menu-divider .ln{flex:1;height:1px;background:rgba(196,120,32,.4)}
+  .menu-board{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(28px,3.4vw,52px)}
+  .mcat{display:flex;flex-direction:column}
+  .mcat .mcat-photo{width:100%;height:190px;display:block;margin-bottom:24px}
+  .mcat h3{font-family:var(--serif);font-weight:400;font-size:29px;color:var(--forest);display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  .mcat h3 .dm{width:7px;height:7px;background:var(--amber);transform:rotate(45deg);flex:none}
+  .mcat .mcat-note{font-size:12px;line-height:1.5;color:var(--sage);margin-bottom:16px;max-width:32ch}
+  .mrow{display:flex;align-items:baseline;gap:8px;padding:9px 0;border-bottom:1px solid rgba(45,58,31,.13)}
+  .mrow .nm{font-size:15px;color:#2a3320;line-height:1.3}
+  .mrow .nm small{color:var(--sage);font-size:11px}
+  .mrow .ldr{flex:1 1 auto;align-self:flex-end;border-bottom:1px dotted rgba(45,58,31,.3);transform:translateY(-4px);min-width:12px}
+  .mrow .pr{font-family:var(--serif);font-size:17px;color:var(--amber);white-space:nowrap}
+  .bebidas{margin-top:clamp(40px,5vw,64px);padding:26px 30px;display:flex;flex-wrap:wrap;align-items:center;gap:14px 32px;justify-content:center;
+    border:1px solid rgba(196,120,32,.4);background:#fff}
+  .bebidas .beb-title{font-family:var(--serif);font-size:21px;color:var(--forest);margin-right:8px}
+  .bebidas .beb-item{font-size:14px;letter-spacing:.04em;color:#2a3320}
+  .bebidas .beb-item b{font-family:var(--serif);font-weight:400;color:var(--amber);margin-left:5px}
+  .bebidas .beb-item{display:inline-flex;align-items:baseline;gap:5px}
+
+  /* ---------- MENÚ EDITABLE ---------- */
+  .m-photo-wrap{position:relative;overflow:hidden;display:block}
+  .m-card .m-photo-wrap{width:100%;height:230px}
+  .m-photo{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .45s ease}
+  .m-card:hover .m-photo{opacity:.92}
+  .mcat .mcat-photo{position:relative;overflow:hidden}
+  .m-card{position:relative}
+  .mcat h3{align-items:center}
+
+  .foot-edit{color:rgba(244,244,237,.5);text-decoration:underline;text-underline-offset:2px;transition:color .25s ease}
+  .foot-edit:hover{color:var(--amber)}
+
+  /* elementos visibles solo en modo edición */
+  .ed-only{display:none}
+  .ph-edit{position:absolute;inset:0;align-items:center;justify-content:center;
+    background:rgba(45,58,31,.62);color:var(--cream);font-family:var(--sans);
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
+    cursor:pointer;text-align:center}
+  body.menu-editing .ph-edit{display:flex}
+  body.menu-editing .m-photo-wrap{cursor:pointer;outline:2px dashed transparent;outline-offset:-2px;transition:outline-color .2s}
+  body.menu-editing .m-photo-wrap:hover{outline-color:var(--amber)}
+  .m-photo-wrap.drop-on{outline:3px solid var(--amber);outline-offset:-3px}
+  .m-photo-wrap.drop-on .ph-edit{background:rgba(196,120,32,.5)}
+
+  body.menu-editing .ed-add-wrap{display:flex;justify-content:center;margin-top:30px}
+  .ed-add{background:transparent;border:1px dashed rgba(196,120,32,.55);color:var(--amber);
+    font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+    padding:11px 22px;border-radius:var(--radius-pill);cursor:pointer;transition:all .25s ease}
+  .ed-add:hover{background:var(--amber);color:var(--forest);border-color:var(--amber)}
+  .mcat > .ed-add{display:none;margin-top:14px;align-self:flex-start;padding:8px 16px;letter-spacing:.12em}
+  body.menu-editing .mcat > .ed-add{display:inline-block}
+  .ed-add-beb{display:none}
+  body.menu-editing .ed-add-beb{display:inline-block;padding:7px 14px}
+
+  .ed-del{display:none;align-items:center;justify-content:center;width:22px;height:22px;flex:none;
+    border:none;border-radius:50%;background:#b23b2e;color:#fff;font-size:16px;line-height:1;cursor:pointer;
+    padding:0;transition:transform .15s ease}
+  .ed-del:hover{transform:scale(1.12)}
+  body.menu-editing .ed-del{display:inline-flex}
+  .m-card .ed-del{position:absolute;top:12px;right:12px;z-index:5;width:30px;height:30px;font-size:19px}
+  .mcat-del{margin-left:8px;width:20px;height:20px;font-size:14px}
+  .mrow .ed-del,.beb-item .ed-del{margin-left:8px}
+
+  /* campos editables */
+  body.menu-editing [data-edit]{cursor:text;border-radius:0;padding:0 5px;margin:0 -2px;
+    box-shadow:0 0 0 1px rgba(196,120,32,.4);min-width:16px;transition:box-shadow .18s ease,background .18s ease}
+  body.menu-editing h4[data-edit],body.menu-editing .mcat h3 [data-edit]{display:inline-block}
+  body.menu-editing [data-edit]:hover{box-shadow:0 0 0 1px var(--amber)}
+  body.menu-editing [data-edit]:focus{outline:none;box-shadow:0 0 0 2px var(--amber);background:rgba(196,120,32,.1)}
+  body.menu-editing [data-edit]:empty::before{content:attr(data-ph);opacity:.45}
+  body.menu-editing .sec-light [data-edit]:focus{background:rgba(196,120,32,.14)}
+
+  /* barra de herramientas */
+  .ed-bar{position:fixed;left:0;right:0;bottom:0;z-index:300;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:13px clamp(16px,4vw,30px);background:var(--black);color:var(--cream);
+    border-top:2px solid var(--amber);box-shadow:0 -14px 34px -16px rgba(0,0,0,.7)}
+  .ed-bar .ed-stat{display:flex;align-items:center;gap:10px;font-family:var(--sans);font-size:13px;letter-spacing:.02em}
+  .ed-bar .dotpt{width:9px;height:9px;border-radius:50%;background:var(--sage);transition:background .3s ease}
+  .ed-bar.dirty .dotpt{background:var(--amber);box-shadow:0 0 0 4px rgba(196,120,32,.2)}
+  .ed-bar .sp{flex:1 1 20px}
+  .ed-bar button{font-family:var(--sans);font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    cursor:pointer;border-radius:var(--radius-pill);padding:11px 17px;border:1px solid rgba(244,244,237,.28);background:transparent;color:var(--cream);transition:all .22s ease}
+  .ed-bar button:hover{border-color:var(--amber);color:var(--amber)}
+  .ed-bar button.primary{background:var(--amber);color:var(--forest);border-color:var(--amber)}
+  .ed-bar button.primary:hover{background:var(--cream);border-color:var(--cream);color:var(--forest)}
+  body.menu-editing{padding-bottom:68px}
+
+  /* modal de ayuda */
+  .ed-modal{position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;
+    padding:24px;background:rgba(17,17,17,.62)}
+  .ed-modal-card{background:var(--cream);color:var(--black);max-width:440px;width:100%;padding:34px 34px 30px;
+    border-top:4px solid var(--amber);box-shadow:0 30px 70px -24px rgba(0,0,0,.5)}
+  .ed-modal-card h3{font-family:var(--serif);font-weight:400;font-size:26px;color:var(--forest);margin-bottom:16px}
+  .ed-modal-body{font-size:14.5px;line-height:1.6;color:#3c4734}
+  .ed-modal-body ol{margin:6px 0 12px;padding-left:20px}
+  .ed-modal-body li{margin-bottom:9px}
+  .ed-modal-body b{color:var(--forest)}
+  .ed-modal-body .muted{font-size:12.5px;color:var(--sage);margin-top:10px}
+  .ed-modal-card .primary{margin-top:18px;font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    cursor:pointer;border:none;border-radius:var(--radius-pill);padding:12px 22px;background:var(--amber);color:var(--forest);transition:all .22s ease}
+  .ed-modal-card .primary:hover{background:var(--forest);color:var(--cream)}
+
+  /* ---------- MODAL GALERÍA MENÚ ---------- */
+  .menu-modal{
+    position:fixed;
+    inset:0;
+    z-index:500;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:clamp(16px,3vw,40px);
+    background:rgba(35,35,34,.72);
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:
+      opacity .42s cubic-bezier(.22,1,.36,1),
+      visibility .42s cubic-bezier(.22,1,.36,1),
+      background .42s cubic-bezier(.22,1,.36,1);
+  }
+  .menu-modal.is-open{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+  }
+  .menu-modal__dialog{
+    position:relative;
+    width:min(920px,calc(100vw - clamp(32px,6vw,96px)));
+    max-height:min(780px,88svh);
+    background:var(--cream);
+    border:1px solid rgba(45,58,31,.14);
+    border-top:4px solid var(--amber);
+    border-radius:0;
+    box-shadow:
+      0 34px 100px -38px rgba(0,0,0,.8),
+      0 0 0 1px rgba(244,244,237,.24);
+    display:block;
+    padding:clamp(14px,2vw,22px);
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(18px) scale(.965);
+    transition:
+      opacity .46s cubic-bezier(.22,1,.36,1),
+      transform .46s cubic-bezier(.22,1,.36,1),
+      box-shadow .46s ease;
+    will-change:transform,opacity;
+  }
+  .menu-modal.is-open .menu-modal__dialog{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+  .menu-modal.is-closing .menu-modal__dialog{
+    opacity:0;
+    transform:translateY(12px) scale(.975);
+  }
+  .menu-modal__media{
+    position:relative;
+    z-index:1;
+    background:#fff;
+    padding:0;
+    border-radius:0;
+    overflow:hidden;
+    max-width:860px;
+    margin:0 auto;
+    box-shadow:0 18px 54px -42px rgba(45,58,31,.62);
+  }
+  .menu-modal__media img{
+    width:100%;
+    height:auto;
+    max-height:calc(88svh - 132px);
+    object-fit:contain;
+    border-radius:0;
+    display:block;
+    background:#fff;
+    box-shadow:
+      0 18px 54px -42px rgba(35,35,34,.62);
+    opacity:1;
+    transform:scale(1);
+    transition:opacity .24s ease, transform .28s cubic-bezier(.22,1,.36,1);
+  }
+  .menu-modal__media img.is-switching{
+    opacity:0;
+    transform:scale(.985);
+  }
+  .menu-modal__caption{
+    position:absolute;
+    left:clamp(36px,4vw,52px);
+    right:clamp(36px,4vw,52px);
+    bottom:clamp(34px,3.5vw,48px);
+    z-index:3;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    padding:13px 16px;
+    color:var(--forest);
+    background:var(--cream);
+    border:1px solid rgba(45,58,31,.12);
+    border-radius:0;
+    box-shadow:0 14px 34px -24px rgba(35,35,34,.5);
+  }
+  .menu-modal__title{font-family:var(--serif);font-size:clamp(24px,3vw,34px);line-height:1;color:var(--forest)}
+  .menu-modal__tag{
+    font-size:10px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--amber);
+    font-weight:700;
+    background:rgba(191,130,51,.1);
+    border:1px solid rgba(191,130,51,.22);
+    border-radius:var(--radius-pill);
+    padding:8px 12px;
+    white-space:nowrap;
+  }
+  .menu-modal__close,
+  .menu-modal__nav{
+    position:absolute;
+    z-index:3;
+    border:0;
+    cursor:pointer;
+    background:var(--cream);
+    color:var(--forest);
+    border:1px solid rgba(45,58,31,.14);
+    border-radius:var(--radius-pill);
+    box-shadow:0 14px 34px -24px rgba(0,0,0,.72);
+    transition:transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .menu-modal__close:hover,
+  .menu-modal__nav:hover{background:rgba(191,130,51,.9);color:#fff;border-color:rgba(191,130,51,.9);transform:translateY(-1px)}
+  .menu-modal__close{
+    top:18px;
+    right:18px;
+    width:44px;
+    height:44px;
+    font-size:25px;
+    line-height:1;
+  }
+  .menu-modal__nav{
+    top:50%;
+    width:48px;
+    height:48px;
+    transform:translateY(-50%);
+    font-size:32px;
+    line-height:1;
+  }
+  .menu-modal__nav:hover{transform:translateY(calc(-50% - 1px))}
+  .menu-modal__prev{left:18px}
+  .menu-modal__next{right:18px}
+  .menu-modal__count{
+    position:absolute;
+    left:18px;
+    top:18px;
+    z-index:3;
+    padding:8px 12px;
+    background:var(--cream);
+    color:var(--forest);
+    border-radius:var(--radius-pill);
+    border:1px solid rgba(45,58,31,.14);
+    box-shadow:0 12px 34px -24px rgba(0,0,0,.72);
+    font-size:10px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+
+  /* ---------- SERVICIOS ---------- */
+  #servicios{
+    background:var(--cream);
+    color:var(--forest);
+    overflow:hidden;
+    padding-top:clamp(112px,12vw,168px);
+    padding-bottom:clamp(112px,12vw,168px);
+  }
+  #servicios::before,
+  #servicios::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    height:74px;
+    background-color:var(--forest);
+    background-image:url('assets/cenefa-rombos.svg');
+    background-repeat:repeat-x;
+    background-position:center;
+    background-size:auto 74px;
+    z-index:0;
+  }
+  #servicios::before{top:0}
+  #servicios::after{bottom:0;transform:rotate(180deg)}
+  #servicios .wrap{position:relative;z-index:1}
+  #servicios .sec-title{color:var(--forest)}
+  #servicios .sec-intro{color:#5f6b55;font-weight:500;font-size:18px;line-height:1.5}
+  .serv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(22px,2.8vw,38px)}
+  .serv-card{
+    position:relative;
+    min-height:470px;
+    padding:38px clamp(24px,3vw,32px) 32px;
+    background:var(--cream-2);
+    border:1px solid rgba(45,58,31,.18);
+    color:var(--forest);
+    transition:transform .45s cubic-bezier(.4,0,.2,1), border-color .45s ease, box-shadow .45s ease, background .45s ease;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .serv-card::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:4px;
+    background:var(--amber);
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:transform .55s cubic-bezier(.4,0,.2,1);
+  }
+  .serv-card:hover{transform:translateY(-6px);border-color:rgba(191,130,51,.42);box-shadow:0 34px 76px -54px rgba(45,58,31,.78)}
+  .serv-card:hover::before{transform:scaleX(1)}
+  .serv-card h4{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3vw,42px);line-height:1.13;color:var(--forest);margin-bottom:20px;transition:color .35s ease, transform .35s ease}
+  .serv-card:hover h4{transform:translateY(-2px)}
+  .serv-card p{font-size:17px;line-height:1.45;color:#5f6b55;font-weight:500;margin-bottom:34px;text-wrap:pretty;max-width:25ch;transition:color .35s ease}
+  .serv-card:hover p{color:#3f4a35}
+  .serv-photo-wrap{width:100%;height:172px;margin-top:auto;margin-bottom:28px;overflow:hidden;background:var(--cream-2);border:1px solid rgba(244,244,237,.18)}
+  .serv-photo{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s cubic-bezier(.4,0,.2,1), filter .7s ease}
+  .serv-card:hover .serv-photo{transform:scale(1.055);filter:saturate(1.06) contrast(1.03)}
+  .serv-card .more{font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--amber);display:inline-flex;align-items:center;gap:12px;width:max-content;padding:10px 15px;border:1px solid rgba(191,130,51,.28);border-radius:0;background:transparent;transition:gap .25s ease, color .25s ease, background .25s ease, border-color .25s ease}
+  .serv-card:hover .more{gap:17px;background:rgba(191,130,51,.08);border-color:rgba(191,130,51,.38)}
+
+  /* ---------- CONTACTO ---------- */
+  .con-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(40px,6vw,80px);align-items:stretch}
+  .contact-title{max-width:none;white-space:nowrap;font-size:clamp(38px,5.05vw,64px)}
+  .con-info .con-line{display:flex;gap:18px;padding:22px 0;border-bottom:1px solid rgba(45,58,31,.16)}
+  .con-info .con-line:first-of-type{border-top:1px solid rgba(45,58,31,.16)}
+  .con-line .k{flex:0 0 96px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--sage);font-weight:600;padding-top:3px}
+  .con-line .v{font-size:16.5px;line-height:1.5;color:#2a3320}
+  .con-line .v .em{font-family:var(--serif);font-style:italic;font-size:20px}
+  .con-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+  .con-cta .btn{gap:9px}
+  .brand-icon{width:18px;height:18px;display:inline-block;flex:none}
+  .con-map{position:relative;min-height:380px;border:1px solid rgba(45,58,31,.18);overflow:hidden;background:var(--cream-2);border-radius:var(--radius-control);box-shadow:0 24px 60px -42px rgba(45,58,31,.65)}
+  .map-canvas{position:absolute;inset:0;background:
+      repeating-linear-gradient(0deg, rgba(244,244,237,.05) 0 1px, transparent 1px 46px),
+      repeating-linear-gradient(90deg, rgba(244,244,237,.05) 0 1px, transparent 1px 46px),
+      radial-gradient(circle at 30% 70%, rgba(139,158,122,.12), transparent 45%),
+      radial-gradient(circle at 70% 30%, rgba(196,120,32,.10), transparent 45%);
+  }
+  .map-roads{position:absolute;inset:0;opacity:.5}
+  .map-roads span{position:absolute;background:rgba(244,244,237,.12)}
+  .map-r1{top:38%;left:0;right:0;height:3px;transform:rotate(-8deg)}
+  .map-r2{top:0;bottom:0;left:58%;width:3px}
+  .map-r3{top:64%;left:-10%;right:-10%;height:2px;transform:rotate(6deg)}
+  .map-pin{position:absolute;top:46%;left:54%;transform:translate(-50%,-100%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .map-pin .pin-dot{width:18px;height:18px;background:var(--amber);border:3px solid var(--cream);border-radius:50% 50% 50% 0;transform:rotate(45deg);box-shadow:0 8px 18px -4px rgba(0,0,0,.5)}
+  .map-pin .pin-lbl{font-family:var(--serif);font-style:italic;font-size:14px;background:var(--cream);color:var(--forest);padding:4px 12px;white-space:nowrap;border-radius:var(--radius-pill)}
+  .map-note{position:absolute;left:16px;bottom:14px;z-index:3;font-family:var(--sans);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,244,237,.4)}
+  .map-frame{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+  /* ---------- FOOTER ---------- */
+  .footer{background:var(--black);color:var(--cream);padding:64px var(--pad) 38px}
+  .foot-top{max-width:var(--container);margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid rgba(244,244,237,.12)}
+  .foot-brand .fb-name{font-family:var(--serif);font-size:34px}
+  .foot-brand .logo-cream{width:162px;height:89px;margin-bottom:4px}
+  .footer .logo-cream{filter:brightness(0) invert(1)}
+  .foot-brand .fb-tag{font-family:var(--serif);font-style:italic;color:var(--sage);font-size:17px;margin-top:8px;max-width:24ch}
+  .foot-cols{display:flex;gap:64px;flex-wrap:wrap}
+  .foot-col h5{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:16px;font-weight:600}
+  .foot-col a,.foot-col p{display:block;font-size:14px;color:rgba(244,244,237,.7);margin-bottom:10px;transition:color .25s ease}
+  .foot-col a:hover{color:var(--amber)}
+  .foot-bottom{max-width:var(--container);margin:0 auto;padding-top:24px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12px;letter-spacing:.04em;color:rgba(244,244,237,.45)}
+
+  /* ---------- REVEAL ---------- */
+  [data-reveal]{
+    opacity:1;
+    transform:none;
+  }
+  #servicios .serv-card[data-reveal]{
+    opacity:0;
+    transform:translateY(22px);
+    transition:opacity .65s ease, transform .65s cubic-bezier(.4,0,.2,1), border-color .45s ease, box-shadow .45s ease, background .45s ease;
+  }
+  #servicios .serv-card[data-reveal].is-visible{opacity:1;transform:none}
+  #servicios .serv-card[data-reveal].is-visible:hover{transform:translateY(-6px)}
+  [data-d="1"]{--d:1}
+  [data-d="2"]{--d:2}
+  [data-d="3"]{--d:3}
+  #servicios .serv-card[data-d="1"]{transition-delay:.08s}
+  #servicios .serv-card[data-d="2"]{transition-delay:.16s}
+  [data-reveal].is-visible{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){
+    .scroll-cue .tempo-cue::before,.scroll-cue .tempo-cue::after{animation:none!important}
+    .site-loader__personaje,.site-loader__line::before{animation:none!important}
+    html{scroll-behavior:auto}
+    [data-reveal],.hero-inner,.scroll-cue,.nav,#servicios .serv-card{opacity:1!important;transform:none!important;transition:none!important}
+    [data-parallax]{--py:0px!important;will-change:auto}
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:980px){
+    .about-grid{grid-template-columns:1fr;gap:54px}
+    .about-photos{aspect-ratio:4/5;max-width:420px;margin:0 auto}
+    .menu-teaser{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto;min-height:0}
+    .menu-teaser::before{display:none}
+    .mt-card,.mt-card--hero,.mt-side .mt-card,.taste-card{min-height:clamp(230px,28svh,270px)}
+    .menu-grid{grid-template-columns:repeat(2,1fr)}
+    .menu-board{grid-template-columns:repeat(2,1fr)}
+    .serv-grid{grid-template-columns:1fr;max-width:540px}
+    .serv-card{min-height:auto}
+    .con-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:680px){
+    .nav-links{display:none}
+    .nav-links.is-open{
+      display:flex;
+      position:fixed;
+      inset:72px 16px auto 16px;
+      flex-direction:column;
+      align-items:stretch;
+      gap:0;
+      padding:18px;
+      background:rgba(244,244,237,.82);
+      border:1px solid rgba(45,58,31,.14);
+      border-radius:var(--radius-control);
+      box-shadow:0 22px 50px -28px rgba(45,58,31,.55);
+    }
+    .nav-links.is-open a{width:100%;justify-content:center;text-align:center}
+    .nav-links.is-open a.link{padding:16px 0;border-bottom:1px solid rgba(45,58,31,.1)}
+    .nav .menu-toggle{display:flex}
+    #menu{padding:30px 0 36px}
+    .menu-head{gap:14px;margin-bottom:18px}
+    .menu-title{font-size:clamp(34px,10.4vw,40px);line-height:.96;max-width:100%}
+    .menu-head .btn-carta{padding:14px 29px;margin:4px auto 0;align-self:center;justify-self:center}
+    .menu-teaser{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto;gap:12px}
+    .mt-card figcaption,.taste-card figcaption{left:8px;right:8px;bottom:8px;gap:4px;padding:7px 8px;flex-direction:column;align-items:flex-start}
+    .mt-card figcaption strong,.taste-card figcaption strong{font-size:clamp(15px,4.25vw,17px)}
+    .mt-card figcaption span,.taste-card figcaption span{font-size:6px;letter-spacing:.1em}
+    .taste-card,.mt-card,.mt-card--hero,.mt-side .mt-card{min-height:178px}
+    .menu-title__line{white-space:nowrap}
+    .menu-modal{padding:14px}
+    .menu-modal__dialog{width:calc(100vw - 28px);max-height:88svh;border-radius:0;padding:14px}
+    .menu-modal__media{border-radius:0}
+    .menu-modal__media img{max-height:calc(88svh - 106px);border-radius:0}
+    .menu-modal__caption{left:22px;right:22px;bottom:22px;align-items:flex-start;flex-direction:column;gap:8px;padding:12px 14px;border-radius:0}
+    .menu-modal__tag{padding:7px 10px}
+    .menu-modal__close{top:16px;right:16px;width:38px;height:38px}
+    .menu-modal__nav{width:40px;height:40px;font-size:28px}
+    .menu-modal__prev{left:16px}
+    .menu-modal__next{right:16px}
+    .menu-modal__count{left:16px;top:16px}
+    .menu-board{grid-template-columns:1fr}
+    #servicios{padding-top:92px;padding-bottom:92px}
+    #servicios::before,#servicios::after{height:54px;background-size:auto 54px}
+    #servicios .sec-intro{font-size:16px}
+    .serv-card{padding:28px 24px 26px}
+    .serv-card h4{font-size:clamp(28px,9vw,35px);margin-bottom:14px}
+    .serv-card p{font-size:15px;margin-bottom:24px}
+    .serv-photo-wrap{height:132px;margin-bottom:22px}
+    .contact-title{white-space:normal}
+    .sec-head{flex-direction:column;align-items:flex-start;gap:18px}
+    .eng-stamp,.eng-croissant,.eng-bread{display:none}
+    .foot-cols{gap:36px}
+  }
+</style>
 </head>
 <body>
 
-  <!-- LOADER -->
-  <div class="loader" id="loader">
-    <img src="assets/logos/logo-negro.png" alt="Tempo Café" class="loader__logo" />
+<div class="site-loader" id="siteLoader" aria-label="Cargando Tempo Café">
+  <div class="site-loader__inner">
+    <img class="site-loader__personaje" src="assets/illustrations/personaje.png" alt="" aria-hidden="true" />
+    <div class="site-loader__line" aria-hidden="true"></div>
+    <div class="site-loader__text">Tempo Café</div>
+  </div>
+</div>
+
+<!-- ===================== NAV ===================== -->
+<nav class="nav" id="nav">
+  <a href="#top" class="brand" aria-label="Tempo Café inicio">
+    <img class="logo-cream" src="assets/logos/logo-negro.png" alt="Tempo Café" />
+  </a>
+  <div class="nav-links">
+    <a href="#nosotros" class="link">Nosotros</a>
+    <a href="#menu" class="link">Menú</a>
+    <a href="#servicios" class="link">Servicios</a>
+    <a href="#contacto" class="btn btn-amber">Contacto</a>
+  </div>
+  <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero" id="top">
+  <div class="diamonds" data-parallax data-parallax-speed="-86"></div>
+
+  <!-- engraving accents (real brand illustrations) -->
+  <div class="engrave eng-clock" data-parallax data-parallax-speed="64" aria-hidden="true">
+    <img src="assets/illustrations/reloj.png" alt="" />
+  </div>
+  <div class="engrave eng-croissant" data-parallax data-parallax-speed="78" aria-hidden="true">
+    <img src="assets/illustrations/taza.png" alt="" />
+  </div>
+  <div class="engrave eng-stamp" data-parallax data-parallax-speed="-54" aria-hidden="true">
+    <img src="assets/illustrations/cafe-negro.png" alt="" />
+  </div>
+  <div class="engrave eng-bread" data-parallax data-parallax-speed="-38" aria-hidden="true">
+    <img src="assets/illustrations/pan-negro.png" alt="" />
   </div>
 
-  <!-- NAV -->
-  <nav class="nav" id="nav">
-    <a href="#inicio"><img src="assets/logos/logo-negro.png" alt="Tempo Café" class="nav__logo" /></a>
-    <ul class="nav__links">
-      <li><a href="#nosotros">Nosotros</a></li>
-      <li><a href="#menu">Menú</a></li>
-      <li><a href="#servicios">Servicios</a></li>
-      <li><a href="#galeria">Galería</a></li>
-      <li><a href="#contacto" class="nav__cta">Contacto</a></li>
-    </ul>
-    <button class="nav__hamburger" id="hamburger" aria-label="Abrir menú">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-  </nav>
-
-  <!-- MOBILE MENU -->
-  <div class="nav__mobile" id="mobileMenu">
-    <a href="#nosotros" class="nav__mobile-link">Nosotros</a>
-    <a href="#menu" class="nav__mobile-link">Menú</a>
-    <a href="#servicios" class="nav__mobile-link">Servicios</a>
-    <a href="#galeria" class="nav__mobile-link">Galería</a>
-    <a href="#contacto" class="nav__mobile-link">Contacto</a>
-    <span class="nav__mobile-sub">Gral. Juan Domingo Perón 1467 · Lun–Vie 8–20 hs</span>
+  <div class="hero-inner">
+    <div class="logo-lockup">
+      <img class="hero-logo logo-cream" src="assets/logos/logo-negro.png" alt="Tempo Café" />
+      <div class="logo-rule"><span class="ln"></span><span class="dot"></span><span class="ln"></span></div>
+    </div>
+    <p class="hero-tagline">Una pausa con arte, sabor y hospitalidad.</p>
+    <p class="hero-addr">Perón 1467 · Lun a Vie, 8 a 20 hs</p>
+    <p class="hero-note">Take-away o barra</p>
   </div>
 
-  <!-- HERO -->
-  <section class="hero" id="inicio">
-    <div class="hero__bg" id="heroBg"></div>
+  <a href="#nosotros" class="scroll-cue" aria-label="Desplazar hacia nosotros">
+    <span class="tempo-cue" aria-hidden="true"></span>
+  </a>
+</header>
 
-    <img src="assets/illustrations/reloj-ambar.png"    alt="" class="hero__illus-left"  aria-hidden="true" />
-    <img src="assets/illustrations/medialuna-ambar.png" alt="" class="hero__illus-right" aria-hidden="true" />
-    <img src="assets/illustrations/personaje.png"       alt="" class="hero__personaje"   aria-hidden="true" />
+<div class="guarda" aria-hidden="true"></div>
 
-    <div class="hero__content">
-      <img src="assets/logos/logo-negro.png" alt="Tempo Café" class="hero__logo" />
-      <div class="hero__divider-line"></div>
-      <p class="hero__tagline">Una pausa con arte,<br>sabor y hospitalidad.</p>
-      <p class="hero__sub">Café de especialidad · Buenos Aires</p>
-      <p class="hero__address">Gral. Juan Domingo Perón 1467 &nbsp;·&nbsp; Lun–Vie 8 a 20 hs</p>
+<!-- ===================== NOSOTROS ===================== -->
+<section class="sec-light sec-pad" id="nosotros">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-copy" data-reveal>
+        <div class="sec-head" style="display:block;margin-bottom:26px">
+          <div class="lbl eyebrow"><span class="num"></span> Nosotros</div>
+        </div>
+        <h3>Comida honesta, calidez artesanal y café al paso.</h3>
+        <p>Tempo Café vive dentro de una academia de danza: un lugar donde el movimiento marca el ritmo y el café marca la pausa. Podés venir por un take-away o sentarte en la barra a bajar un cambio.</p>
+        <p><strong>Martu</strong>, pastelera y politóloga de familia italiana, trae la memoria de las recetas de la nonna. <strong>El Francés</strong>, cocinero con oficio entre Argentina y Estados Unidos, aporta técnica y una obsesión por el producto. Juntos sostienen una cocina 100% propia: no negocian la calidad.</p>
+        <div class="founders">
+          <div class="founder"><span class="fn">Martu</span><span class="fr">Pastelera · Politóloga</span></div>
+          <div class="founder"><span class="fn">El Francés</span><span class="fr">Chef · ARG / USA</span></div>
+        </div>
+      </div>
+      <div class="about-photos" data-reveal data-d="1" data-parallax data-parallax-speed="62">
+        <image-slot id="owner-front" class="ph-solo" shape="rect" src="fotos/foto_pareja centrada.png" placeholder="Foto de los dueños"></image-slot>
+        <span class="pmark serif italic">Hecho a mano</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="guarda" aria-hidden="true"></div>
+
+<!-- ===================== MENÚ ===================== -->
+<section class="sec-light sec-pad" id="menu">
+  <div class="wrap">
+    <div class="sec-head menu-head">
+      <div data-reveal>
+        <div class="lbl eyebrow" style="margin-bottom:18px"><span class="num"></span> Menú</div>
+        <h2 class="sec-title menu-title">Especialidad de <span class="menu-title__line">barra <span class="serif italic" style="color:var(--amber)">&amp;</span> pastelería</span></h2>
+      </div>
+      <!-- Reemplazar el href por el link del PDF de la carta en Google Drive -->
+      <a id="cartaLink" href="https://drive.google.com/PEGAR-LINK-DEL-PDF" target="_blank" rel="noopener" class="btn-carta" data-reveal data-d="1">Ver menú</a>
     </div>
 
-    <div class="hero__scroll">
-      <span>Scroll</span>
-      <div class="hero__scroll-line"></div>
-    </div>
-  </section>
-
-  <!-- NOSOTROS -->
-  <section class="section nosotros" id="nosotros">
-    <div class="container">
-      <div class="nosotros__inner">
-
-        <div class="nosotros__text">
-          <span class="label reveal">Quiénes somos</span>
-          <h2 class="heading reveal reveal-delay-1">Detrás del<br>mostrador.</h2>
-          <p class="body-text nosotros__body reveal reveal-delay-2">
-            Martu es pastelera y politóloga, con raíces en la tradición gastronómica italiana de su familia. El Francés es chef con experiencia en Argentina y en los Estados Unidos. Juntos crearon Tempo dentro de una academia de danza en el corazón de Buenos Aires.
-          </p>
-          <p class="body-text reveal reveal-delay-3" style="margin-top:1rem;">
-            No negociamos la calidad: el 100% de nuestra propuesta es de producción propia. Café de especialidad de Puerto Blest, medialunas, repostería y una cocina que se toma en serio cada plato.
-          </p>
-          <div style="margin-top:2.5rem;" class="reveal reveal-delay-4">
-            <span class="nosotros__badge">Hecho en Buenos Aires · 2026</span>
+    <div class="menu-teaser">
+      <figure class="mt-card mt-card--hero" data-reveal data-parallax data-parallax-speed="34" data-carousel>
+        <div class="mt-carousel" aria-label="Café de especialidad">
+          <img class="is-active" src="fotos/cafe_1.jpeg" alt="Café take-away Tempo Café" />
+          <img src="fotos/cafe_2.jpeg" alt="Vasos Tempo Café sobre fondo claro" />
+          <img src="fotos/cafe_3.jpeg" alt="Barra y café Tempo" />
+        </div>
+        <figcaption><strong>Café</strong><span>Puerto Blest</span></figcaption>
+      </figure>
+      <div class="mt-side">
+        <figure class="mt-card" data-reveal data-d="1" data-parallax data-parallax-speed="-28" data-carousel>
+          <div class="mt-carousel" aria-label="Pastelería propia">
+            <img class="is-active" src="fotos/budin_1_pasteleria.jpeg" alt="Budín Tempo Café" />
+            <img src="fotos/budin_2_pasteleria.jpeg" alt="Budín de limón con flores" />
+            <img src="fotos/cookie_pasteleria.jpeg" alt="Cookie Tempo Café" />
+            <img src="fotos/cookie_2_pasteleria.jpeg" alt="Cookie de chocolate Tempo Café" />
+            <img src="fotos/alfajores_pasteleria.jpeg" alt="Alfajores sablé con dulce de leche" />
+            <img src="fotos/medialunas.jpeg" alt="Medialunas Tempo Café" />
           </div>
-        </div>
-
-        <div class="nosotros__visual reveal-right">
-          <img
-            src="fotos/DSC03041.jpeg"
-            alt="Martu y El Francés — Tempo Café"
-            class="nosotros__img-main"
-          />
-          <img
-            src="fotos/DSC02954.jpeg"
-            alt="Barra de Tempo Café"
-            class="nosotros__img-accent"
-          />
-          <img
-            src="assets/illustrations/personaje.png"
-            alt=""
-            class="nosotros__illus"
-            aria-hidden="true"
-          />
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- MENÚ -->
-  <section class="section menu" id="menu">
-    <div class="container">
-
-      <div class="menu__header">
-        <div>
-          <span class="label reveal" style="color:rgba(240,237,230,0.45)">Lo que hacemos</span>
-          <h2 class="heading reveal reveal-delay-1" style="color:var(--cream)">Nuestra propuesta</h2>
-        </div>
-        <p class="body-text reveal reveal-delay-2" style="text-align:right; max-width:320px;">
-          Comida honesta, calidez artesanal<br>y el mejor café al paso.
-        </p>
-      </div>
-
-      <!-- CAFÉ -->
-      <div class="menu__cat-title reveal">
-        <img src="assets/illustrations/taza-ambar.png" alt="" class="menu__cat-icon" />
-        <span>Café</span>
-      </div>
-      <div class="menu__grid menu__grid--cafe">
-        <div class="menu__item-row reveal"><span class="menu__item-name">Espresso</span><span class="menu__item-price">$3500</span></div>
-        <div class="menu__item-row reveal reveal-delay-1"><span class="menu__item-name">Cortado</span><span class="menu__item-price">$4000</span></div>
-        <div class="menu__item-row reveal reveal-delay-2"><span class="menu__item-name">Flat White</span><span class="menu__item-price">$5500</span></div>
-        <div class="menu__item-row reveal"><span class="menu__item-name">Latte</span><span class="menu__item-price">$4500</span></div>
-        <div class="menu__item-row reveal reveal-delay-1"><span class="menu__item-name">Capuccino</span><span class="menu__item-price">$5000</span></div>
-        <div class="menu__item-row reveal reveal-delay-2"><span class="menu__item-name">Iced Coffee</span><span class="menu__item-price">$4800</span></div>
-        <div class="menu__item-row reveal"><span class="menu__item-name">Extra shot</span><span class="menu__item-price">$2000</span></div>
-        <div class="menu__item-row reveal reveal-delay-1"><span class="menu__item-name">Té</span><span class="menu__item-price">$2500</span></div>
-      </div>
-
-      <!-- PARA TODO EL DÍA -->
-      <div class="menu__cat-title reveal" style="margin-top:3.5rem;">
-        <img src="assets/illustrations/medialuna-ambar.png" alt="" class="menu__cat-icon" />
-        <span>Para todo el día</span>
-      </div>
-      <div class="menu__grid">
-        <div class="menu__card reveal">
-          <img src="fotos/5DA38264-85D4-4BBE-8E0B-2337D50E6136.jpeg" alt="Medialunas Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Panadería</span>
-          <p class="menu__name">Medialuna</p>
-          <p class="menu__desc">De producción propia.</p>
-          <p class="menu__price">$2000</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-1">
-          <img src="fotos/DSC02768.jpeg" alt="Scon relleno Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Panadería</span>
-          <p class="menu__name">Medialuna rellena</p>
-          <p class="menu__desc">Relleno de producción propia.</p>
-          <p class="menu__price">$3500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-2">
-          <img src="fotos/DSC02848.jpeg" alt="Cookie chocolate chips Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Repostería</span>
-          <p class="menu__name">Cookie chocolate chips</p>
-          <p class="menu__desc">Receta artesanal.</p>
-          <p class="menu__price">$3500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-1">
-          <img src="fotos/DSC02835.jpeg" alt="Cookie Red Velvet Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Repostería</span>
-          <p class="menu__name">Cookie Red Velvet</p>
-          <p class="menu__desc">Receta artesanal.</p>
-          <p class="menu__price">$3500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-2">
-          <img src="fotos/DSC02855.jpeg" alt="Budín de limón Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Repostería</span>
-          <p class="menu__name">Budín de limón</p>
-          <p class="menu__desc">De producción propia.</p>
-          <p class="menu__price">$2500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-3">
-          <img src="fotos/DSC02880.jpeg" alt="Budín de chocolate Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Repostería</span>
-          <p class="menu__name">Budín de chocolate</p>
-          <p class="menu__desc">De producción propia.</p>
-          <p class="menu__price">$3000</p>
-        </div>
-        <div class="menu__card reveal">
-          <img src="fotos/DSC02887.jpeg" alt="Budín de naranja sin TACC Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Sin TACC</span>
-          <p class="menu__name">Budín de naranja</p>
-          <p class="menu__desc">Sin TACC. 100% artesanal.</p>
-          <p class="menu__price">$3000</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-1">
-          <img src="assets/illustrations/medialuna-ambar.png" alt="" class="menu__illus" />
-          <span class="menu__cat">Repostería</span>
-          <p class="menu__name">Scon</p>
-          <p class="menu__desc">De producción propia.</p>
-          <p class="menu__price">$2500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-2">
-          <img src="fotos/DSC02768.jpeg" alt="Scon relleno Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Repostería</span>
-          <p class="menu__name">Scon relleno</p>
-          <p class="menu__desc">Relleno artesanal.</p>
-          <p class="menu__price">$3500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-3">
-          <img src="fotos/DSC02727.jpeg" alt="Alfajor Sablé Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Repostería</span>
-          <p class="menu__name">Alfajor Sablé</p>
-          <p class="menu__desc">De producción propia.</p>
-          <p class="menu__price">$2500</p>
-        </div>
-      </div>
-
-      <!-- ALMUERZOS -->
-      <div class="menu__cat-title reveal" style="margin-top:3.5rem;">
-        <img src="assets/illustrations/pan-ambar.png" alt="" class="menu__cat-icon" />
-        <span>Almuerzos</span>
-      </div>
-      <div class="menu__grid">
-        <div class="menu__card reveal">
-          <img src="fotos/DSC02828.jpeg" alt="Pollo Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Almuerzos</span>
-          <p class="menu__name">Pollo</p>
-          <p class="menu__desc">Con puré o ensalada.</p>
-          <p class="menu__price">$12500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-1">
-          <img src="fotos/DSC02817.jpeg" alt="Bondiola braseada Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Almuerzos</span>
-          <p class="menu__name">Bondiola braseada</p>
-          <p class="menu__desc">Con puré o ensalada.</p>
-          <p class="menu__price">$14000</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-2">
-          <img src="fotos/DSC02828.jpeg" alt="Tapa de Asado Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Almuerzos</span>
-          <p class="menu__name">Tapa de Asado</p>
-          <p class="menu__desc">Con puré o ensalada.</p>
-          <p class="menu__price">$15000</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-1">
-          <img src="fotos/DSC02993.jpeg" alt="Pizza Margherita Tempo Café" class="menu__foto" />
-          <span class="menu__cat">Pizzas</span>
-          <p class="menu__name">Pizza Margherita</p>
-          <p class="menu__desc">48hs de levado.</p>
-          <p class="menu__price">$12000</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-2">
-          <span class="menu__cat">Pizzas</span>
-          <p class="menu__name">Pizza 4 Quesos</p>
-          <p class="menu__desc">48hs de levado.</p>
-          <p class="menu__price">$13000</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-3">
-          <span class="menu__cat">Pizzas</span>
-          <p class="menu__name">Pizza Pepperoni</p>
-          <p class="menu__desc">48hs de levado.</p>
-          <p class="menu__price">$13000</p>
-        </div>
-        <div class="menu__card reveal">
-          <span class="menu__cat">Tartas</span>
-          <p class="menu__name">Tarta de Pollo</p>
-          <p class="menu__desc">De producción propia.</p>
-          <p class="menu__price">$7500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-1">
-          <span class="menu__cat">Tartas</span>
-          <p class="menu__name">Tarta de Calabaza</p>
-          <p class="menu__desc">De producción propia.</p>
-          <p class="menu__price">$6500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-2">
-          <span class="menu__cat">Tartas</span>
-          <p class="menu__name">Tarta Jamón y queso</p>
-          <p class="menu__desc">De producción propia.</p>
-          <p class="menu__price">$6500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-1">
-          <span class="menu__cat">Empanadas</span>
-          <p class="menu__name">Empanada de Carne</p>
-          <p class="menu__desc">De producción propia.</p>
-          <p class="menu__price">$3500</p>
-        </div>
-        <div class="menu__card reveal reveal-delay-2">
-          <span class="menu__cat">Empanadas</span>
-          <p class="menu__name">Empanada Quinoa Caprese</p>
-          <p class="menu__desc">De producción propia.</p>
-          <p class="menu__price">$3200</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- SERVICIOS -->
-  <section class="section servicios" id="servicios">
-    <div class="container">
-      <div class="servicios__header">
-        <span class="label reveal">También hacemos</span>
-        <h2 class="heading reveal reveal-delay-1">Servicios especiales</h2>
-        <p class="body-text reveal reveal-delay-2">
-          Llevamos Tempo a tu evento.<br>Calidad artesanal donde nos necesités.
-        </p>
-      </div>
-
-      <div class="servicios__grid">
-
-        <div class="servicio reveal">
-          <div class="servicio__num">01</div>
-          <h3 class="servicio__title">Catering</h3>
-          <p class="servicio__desc">
-            Armamos una propuesta a medida para tu evento.
-            Café, picada, repostería y más — todo de producción propia.
-          </p>
-        </div>
-
-        <div class="servicio reveal reveal-delay-2">
-          <div class="servicio__num">02</div>
-          <h3 class="servicio__title">Mesa Dulce</h3>
-          <p class="servicio__desc">
-            Cookies, budines, tartas y medialunas presentadas con la estética Tempo.
-            Para cumpleaños, reuniones y celebraciones.
-          </p>
-        </div>
-
-        <div class="servicio reveal reveal-delay-4">
-          <div class="servicio__num">03</div>
-          <h3 class="servicio__title">Desayunos Corporativos</h3>
-          <p class="servicio__desc">
-            Café de especialidad y desayuno artesanal para tu equipo.
-            Puntualidad, presentación y calidad garantizadas.
-          </p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- GALERÍA -->
-  <section class="section galeria" id="galeria">
-    <div class="container">
-
-      <div class="galeria__header">
-        <div>
-          <span class="label reveal" style="color:rgba(240,237,230,0.45)">El espacio</span>
-          <h2 class="heading reveal reveal-delay-1" style="color:var(--cream)">Vení a conocernos</h2>
-        </div>
-      </div>
-
-      <div class="galeria__grid">
-
-        <div class="galeria__item reveal">
-          <img src="fotos/DSC03041.jpeg" alt="Martu y El Francés — Tempo Café" />
-          <div class="galeria__caption">Martu &amp; El Francés</div>
-        </div>
-
-        <div class="galeria__item reveal reveal-delay-1">
-          <img src="fotos/DSC02954.jpeg" alt="Barra de Tempo Café" />
-          <div class="galeria__caption">El rincón del café</div>
-        </div>
-
-        <div class="galeria__item reveal reveal-delay-2">
-          <img src="fotos/DSC03027.jpeg" alt="Tempo Café — lifestyle" />
-          <div class="galeria__caption">Siempre en barra</div>
-        </div>
-
-        <div class="galeria__item reveal reveal-delay-1">
-          <img src="fotos/DSC02993.jpeg" alt="Pizza Margherita — 48hs de levado" />
-          <div class="galeria__caption">48hs de levado</div>
-        </div>
-
-        <div class="galeria__item reveal reveal-delay-2">
-          <img src="fotos/DSC02855.jpeg" alt="Repostería artesanal Tempo Café" />
-          <div class="galeria__caption">Repostería artesanal</div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACTO -->
-  <section class="section contacto" id="contacto">
-    <div class="container">
-      <div class="contacto__grid">
-
-        <div class="contacto__info">
-          <div>
-            <span class="label reveal" style="color:rgba(240,237,230,0.45)">Encontranos</span>
-            <h2 class="heading reveal reveal-delay-1" style="color:var(--cream)">Vení a tomar<br>un café.</h2>
+          <figcaption><strong>Pastelería</strong><span>Hecho acá</span></figcaption>
+        </figure>
+        <figure class="mt-card" data-reveal data-d="2" data-parallax data-parallax-speed="24" data-carousel>
+          <div class="mt-carousel" aria-label="Almuerzos">
+            <img class="is-active" src="fotos/almuerzo_1.jpeg" alt="Almuerzo Tempo Café" />
+            <img src="fotos/almuerzo_2.jpeg" alt="Plato de cocina Tempo Café" />
           </div>
-
-          <div class="reveal reveal-delay-2">
-            <span class="contacto__block-label">Dirección</span>
-            <p class="contacto__block-value">
-              Gral. Juan Domingo Perón 1467<br>Buenos Aires, Argentina
-            </p>
+          <figcaption><strong>Almuerzos</strong><span>Platos de cocina</span></figcaption>
+        </figure>
+      </div>
+      <div class="menu-preview" data-reveal data-d="1" aria-label="Vista rápida del menú">
+        <figure class="taste-card" data-carousel>
+          <div class="mt-carousel" aria-label="Pizzas">
+            <img class="is-active" src="fotos/pizza_1.jpeg" alt="Pizza Tempo Café" />
           </div>
-
-          <div class="reveal reveal-delay-3">
-            <span class="contacto__block-label">Horarios</span>
-            <p class="contacto__block-value">
-              Lunes a Viernes<br>8:00 a 20:00 hs
-            </p>
+          <figcaption><strong>Pizzas</strong><span>48 h de levado</span></figcaption>
+        </figure>
+        <figure class="taste-card" data-carousel>
+          <div class="mt-carousel" aria-label="Empanadas">
+            <img class="is-active" src="fotos/scon_relleno.jpeg" alt="Opción salada Tempo Café" />
+            <img src="fotos/almuerzo_2.jpeg" alt="Opción salada Tempo Café" />
           </div>
-
-          <div class="reveal reveal-delay-4">
-            <span class="contacto__block-label">Seguinos & Contacto</span>
-            <div class="contacto__buttons">
-              <a href="https://www.instagram.com/tempocafe_/" target="_blank" rel="noopener" class="btn btn--ig">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <rect x="2" y="2" width="20" height="20" rx="5"/>
-                  <circle cx="12" cy="12" r="4"/>
-                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
-                </svg>
-                @tempocafe_
-              </a>
-              <a href="https://wa.me/549XXXXXXXXXX" target="_blank" rel="noopener" class="btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                </svg>
-                WhatsApp
-              </a>
-            </div>
+          <figcaption><strong>Empanadas</strong><span>Carne · Pollo</span></figcaption>
+        </figure>
+        <figure class="taste-card" data-carousel>
+          <div class="mt-carousel" aria-label="Tartas">
+            <img class="is-active" src="fotos/almuerzo_2.jpeg" alt="Tarta Tempo Café" />
+            <img src="fotos/scon_relleno.jpeg" alt="Opción salada Tempo Café" />
           </div>
-        </div>
-
-        <div class="contacto__map reveal-right">
-          <iframe
-            src="https://maps.google.com/maps?q=Gral.+Juan+Domingo+Per%C3%B3n+1467%2C+Buenos+Aires%2C+Argentina&output=embed"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="Ubicación Tempo Café — Gral. Juan Domingo Perón 1467"
-          ></iframe>
-        </div>
-
+          <figcaption><strong>Tartas</strong><span>Pollo · Calabaza</span></figcaption>
+        </figure>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <img src="assets/logos/logo-negro.png" alt="Tempo Café" class="footer__logo" />
-    <p class="footer__copy">© 2026 Tempo Café · Buenos Aires</p>
-    <p class="footer__made">Hecho en Buenos Aires, Argentina</p>
-  </footer>
+<!-- ===================== SERVICIOS ===================== -->
+<section class="sec-pad" id="servicios">
+  <div class="wrap">
+    <div class="sec-head">
+      <div data-reveal>
+        <div class="lbl eyebrow" style="margin-bottom:18px"><span class="num"></span> Servicios</div>
+        <h2 class="sec-title">Llevamos Tempo a tu mesa</h2>
+      </div>
+      <p class="sec-intro" data-reveal data-d="1">Gastronomía profesional para eventos, empresas y celebraciones. Producción artesanal, servicio cuidado.</p>
+    </div>
 
-  <!-- SCRIPTS -->
-  <script>
-    // --- HAMBURGER ---
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileLinks = document.querySelectorAll('.nav__mobile-link');
+    <div class="serv-grid">
+      <article class="serv-card" data-reveal>
+        <h4>Catering</h4>
+        <p>Cocina dulce y salada, hecha el mismo día, para tu evento.</p>
+        <div class="serv-photo-wrap"><img class="serv-photo" src="assets/servicios-catering.jpg" alt="Mesa de catering con bocados dulces y salados" /></div>
+        <span class="more">Consultar <span aria-hidden="true">→</span></span>
+      </article>
+      <article class="serv-card" data-reveal data-d="1">
+        <h4>Mesa Dulce</h4>
+        <p>Pastelería fina de autor para cumpleaños, casamientos y celebraciones.</p>
+        <div class="serv-photo-wrap"><img class="serv-photo" src="assets/servicios-mesa-dulce.jpg" alt="Cupcakes y pastelería fina para mesa dulce" /></div>
+        <span class="more">Consultar <span aria-hidden="true">→</span></span>
+      </article>
+      <article class="serv-card" data-reveal data-d="2">
+        <h4>Desayunos Corporativos</h4>
+        <p>Café de especialidad y viandas para oficinas, reuniones y lanzamientos.</p>
+        <div class="serv-photo-wrap"><img class="serv-photo" src="assets/servicios-desayunos.jpg" alt="Mesa con café, té y desayuno para reunión corporativa" /></div>
+        <span class="more">Consultar <span aria-hidden="true">→</span></span>
+      </article>
+    </div>
+  </div>
+</section>
 
-    hamburger.addEventListener('click', () => {
-      const isOpen = mobileMenu.classList.toggle('open');
-      hamburger.classList.toggle('open', isOpen);
-      document.body.style.overflow = isOpen ? 'hidden' : '';
-    });
+<!-- ===================== CONTACTO ===================== -->
+<section class="sec-light sec-pad" id="contacto">
+  <div class="wrap">
+    <div class="sec-head">
+      <div data-reveal>
+        <div class="lbl eyebrow" style="margin-bottom:18px"><span class="num"></span> Contacto</div>
+        <h2 class="sec-title contact-title">Te esperamos para una pausa</h2>
+      </div>
+    </div>
 
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.remove('open');
-        hamburger.classList.remove('open');
-        document.body.style.overflow = '';
-      });
-    });
+    <div class="con-grid">
+      <div class="con-info" data-reveal>
+        <div class="con-line"><div class="k">Dirección</div><div class="v"><span class="em serif">Gral. J. D. Perón 1467</span><br/>Buenos Aires · Dentro de la academia de danza</div></div>
+        <div class="con-line"><div class="k">Horarios</div><div class="v">Lunes a Viernes · 8:00 – 20:00 hs<br/>Modalidad take-away &amp; barra</div></div>
+        <div class="con-line"><div class="k">Pedidos</div><div class="v">Instagram <span class="em serif">@tempocafe_</span><br/>WhatsApp · a confirmar</div></div>
+        <div class="con-cta">
+          <a href="https://instagram.com/tempocafe_" class="btn btn-amber" target="_blank" rel="noopener" aria-label="Instagram de Tempo Café">
+            <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 2A3.8 3.8 0 0 0 4 7.8v8.4A3.8 3.8 0 0 0 7.8 20h8.4a3.8 3.8 0 0 0 3.8-3.8V7.8A3.8 3.8 0 0 0 16.2 4H7.8Zm8.95 1.65a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8Zm0 2a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Z"/></svg>
+            Instagram
+          </a>
+          <a href="https://wa.me/" class="btn btn-ghost" target="_blank" rel="noopener" aria-label="WhatsApp de Tempo Café">
+            <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.04 2a9.9 9.9 0 0 1 8.42 15.11L21.8 22l-5.01-1.31A9.98 9.98 0 0 1 2.08 12 9.96 9.96 0 0 1 12.04 2Zm0 1.98A7.98 7.98 0 0 0 4.06 12a7.9 7.9 0 0 0 2.3 5.62l.34.34-.78 2.85 2.93-.77.33.2a7.97 7.97 0 0 0 10.88-3.06 7.9 7.9 0 0 0 .96-3.78 7.99 7.99 0 0 0-7.98-7.42Zm-3.44 3.9c.17 0 .35 0 .5.01.13 0 .37-.05.58.44.22.53.75 1.83.82 1.96.06.13.1.29.02.46-.08.17-.12.28-.25.43-.13.15-.27.34-.39.46-.13.13-.26.27-.11.53.15.26.67 1.1 1.44 1.78.99.88 1.82 1.15 2.08 1.28.26.13.41.11.56-.06.15-.17.65-.76.82-1.02.17-.26.34-.22.58-.13.24.09 1.53.72 1.79.85.26.13.44.19.5.3.06.11.06.62-.15 1.21-.21.59-1.23 1.13-1.72 1.17-.44.04-.99.06-1.6-.1-.37-.1-.84-.27-1.45-.53-2.55-1.1-4.21-3.66-4.34-3.83-.13-.17-1.04-1.38-1.04-2.64 0-1.26.66-1.88.89-2.14.24-.26.52-.33.7-.33Z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
 
-    // --- LOADER ---
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('loader').classList.add('hidden');
-      }, 1000);
-    });
+      <div class="con-map" data-reveal data-d="1">
+        <iframe class="map-frame" title="Mapa de Tempo Café — Gral. Juan Domingo Perón 1467, Buenos Aires" src="https://maps.google.com/maps?q=Gral.%20Juan%20Domingo%20Per%C3%B3n%201467%2C%20Buenos%20Aires%2C%20Argentina&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
 
-    // --- NAV: hide on scroll down, show on scroll up ---
+<div class="guarda" aria-hidden="true"></div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="foot-top">
+    <div class="foot-brand">
+      <img class="logo-cream" src="assets/logos/logo-negro.png" alt="Tempo Café" />
+      <p class="fb-tag">Una pausa con arte, sabor y hospitalidad.</p>
+    </div>
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h5>Navegación</h5>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#menu">Menú</a>
+        <a href="#servicios">Servicios</a>
+      </div>
+      <div class="foot-col">
+        <h5>Visitanos</h5>
+        <p>Gral. J. D. Perón 1467</p>
+        <p>Buenos Aires</p>
+        <p>Lun a Vie · 8 a 20 hs</p>
+      </div>
+      <div class="foot-col">
+        <h5>Seguinos</h5>
+        <a href="https://instagram.com/tempocafe_" target="_blank" rel="noopener">Instagram @tempocafe_</a>
+        <a href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© <span id="yr">2026</span> Tempo Café · Café de especialidad</span>
+    <span>Buenos Aires, Argentina · @tempocafe_</span>
+  </div>
+</footer>
+
+<div class="menu-modal" id="menuModal" role="dialog" aria-modal="true" aria-label="Galería de menú" aria-hidden="true">
+  <div class="menu-modal__dialog">
+    <button class="menu-modal__close" type="button" aria-label="Cerrar galería">×</button>
+    <button class="menu-modal__nav menu-modal__prev" type="button" aria-label="Imagen anterior">‹</button>
+    <button class="menu-modal__nav menu-modal__next" type="button" aria-label="Imagen siguiente">›</button>
+    <div class="menu-modal__count" aria-live="polite">1 / 1</div>
+    <div class="menu-modal__media">
+      <img src="" alt="" />
+    </div>
+    <div class="menu-modal__caption">
+      <div class="menu-modal__title"></div>
+      <div class="menu-modal__tag"></div>
+    </div>
+  </div>
+</div>
+
+<script src="image-slot.js"></script>
+<script>
+  // ---- Initial loader ----
+  (function(){
+    const loader = document.getElementById('siteLoader');
+    if (!loader) return;
+
+    function hideLoader(){
+      loader.classList.add('is-hidden');
+      window.setTimeout(function(){
+        if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+      }, 800);
+    }
+
+    if (document.readyState === 'complete') {
+      window.setTimeout(hideLoader, 1200);
+    } else {
+      window.addEventListener('load', function(){
+        window.setTimeout(hideLoader, 1200);
+      }, { once:true });
+      window.setTimeout(hideLoader, 3200);
+    }
+  })();
+
+  // ---- Nav: hide on scroll down, solid after hero ----
+  (function(){
     const nav = document.getElementById('nav');
-    let lastY = 0;
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      if (y > 80) {
-        nav.classList.add('scrolled');
-        nav.classList.toggle('hidden', y > lastY + 10);
-        if (y < lastY - 5) nav.classList.remove('hidden');
-      } else {
-        nav.classList.remove('scrolled', 'hidden');
-      }
-      lastY = y;
-    }, { passive: true });
+    const links = document.querySelector('.nav-links');
+    const toggle = document.getElementById('menuToggle');
+    let last = window.scrollY;
+    let ticking = false;
 
-    // --- PARALLAX on hero background ---
-    const heroBg = document.getElementById('heroBg');
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      if (y < window.innerHeight * 1.5) {
-        heroBg.style.transform = `translateY(${y * 0.35}px)`;
-      }
-    }, { passive: true });
-
-    // --- SCROLL REVEAL via IntersectionObserver ---
-    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
+    if (toggle && links) {
+      toggle.addEventListener('click', function(){
+        const isOpen = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', isOpen);
+        toggle.setAttribute('aria-expanded', String(isOpen));
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      links.querySelectorAll('a').forEach(function(link){
+        link.addEventListener('click', function(){
+          links.classList.remove('is-open');
+          toggle.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
 
-    revealEls.forEach(el => observer.observe(el));
-  </script>
+    function update(){
+      const y = window.scrollY;
+      nav.classList.toggle('nav--solid', y > 40);
+      if (y > last && y > 200){ nav.classList.add('nav--hidden'); }
+      else { nav.classList.remove('nav--hidden'); }
+      last = y;
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ requestAnimationFrame(update); ticking = true; }
+    }, {passive:true});
+  })();
 
+  // ---- Reveal hooks ----
+  (function(){
+    const items = Array.from(document.querySelectorAll('[data-reveal]'));
+    if (!items.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+      items.forEach(function(item){ item.classList.add('is-visible'); });
+      return;
+    }
+
+    const observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.16, rootMargin: '0px 0px -40px 0px' });
+
+    items.forEach(function(item){ observer.observe(item); });
+  })();
+
+  // ---- Subtle parallax accents ----
+  (function(){
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const parallaxItems = Array.from(document.querySelectorAll('[data-parallax]'));
+    let ticking = false;
+
+    if (!parallaxItems.length || reduceMotion.matches) return;
+
+    function updateParallax(){
+      const vh = window.innerHeight || 1;
+      parallaxItems.forEach(function(el){
+        const rect = el.getBoundingClientRect();
+        if (rect.bottom < -80 || rect.top > vh + 80) return;
+        const speed = Number(el.dataset.parallaxSpeed || 16);
+        const center = rect.top + rect.height / 2;
+        const progress = (center - vh / 2) / (vh * 0.82);
+        const y = Math.max(-78, Math.min(78, -progress * speed));
+        el.style.setProperty('--py', y.toFixed(2) + 'px');
+      });
+      ticking = false;
+    }
+
+    function requestParallax(){
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    }
+
+    updateParallax();
+    window.addEventListener('scroll', requestParallax, {passive:true});
+    window.addEventListener('resize', requestParallax);
+  })();
+
+  // ---- Menu category carousels ----
+  (function(){
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const carousels = Array.from(document.querySelectorAll('[data-carousel]'));
+    const modal = document.getElementById('menuModal');
+    const modalImg = modal ? modal.querySelector('.menu-modal__media img') : null;
+    const modalTitle = modal ? modal.querySelector('.menu-modal__title') : null;
+    const modalTag = modal ? modal.querySelector('.menu-modal__tag') : null;
+    const modalCount = modal ? modal.querySelector('.menu-modal__count') : null;
+    const closeBtn = modal ? modal.querySelector('.menu-modal__close') : null;
+    const prevBtn = modal ? modal.querySelector('.menu-modal__prev') : null;
+    const nextBtn = modal ? modal.querySelector('.menu-modal__next') : null;
+    let modalSlides = [];
+    let modalIndex = 0;
+    let lastFocus = null;
+    let closeTimer = null;
+
+    if (!carousels.length) return;
+
+    function renderModal(animate){
+      const slide = modalSlides[modalIndex];
+      if (!slide || !modalImg) return;
+
+      function applySlide(){
+        modalImg.src = slide.src;
+        modalImg.alt = slide.alt || '';
+        if (animate) {
+          window.requestAnimationFrame(function(){
+            modalImg.classList.remove('is-switching');
+          });
+        }
+      }
+
+      if (animate) {
+        modalImg.classList.add('is-switching');
+        window.setTimeout(applySlide, 120);
+      } else {
+        modalImg.classList.remove('is-switching');
+        applySlide();
+      }
+
+      if (modalTitle) modalTitle.textContent = slide.title || '';
+      if (modalTag) modalTag.textContent = slide.tag || '';
+      if (modalCount) modalCount.textContent = (modalIndex + 1) + ' / ' + modalSlides.length;
+      const hasMany = modalSlides.length > 1;
+      if (prevBtn) prevBtn.style.display = hasMany ? '' : 'none';
+      if (nextBtn) nextBtn.style.display = hasMany ? '' : 'none';
+    }
+
+    function openModal(card){
+      if (!modal) return;
+      const title = card.querySelector('figcaption strong')?.textContent.trim() || '';
+      const tag = card.querySelector('figcaption span')?.textContent.trim() || '';
+      modalSlides = Array.from(card.querySelectorAll('.mt-carousel img')).map(function(img){
+        return { src: img.currentSrc || img.src, alt: img.alt, title: title, tag: tag };
+      });
+      if (!modalSlides.length) return;
+      const active = card.querySelector('.mt-carousel img.is-active');
+      modalIndex = Math.max(0, modalSlides.findIndex(function(slide){ return active && slide.src === (active.currentSrc || active.src); }));
+      lastFocus = document.activeElement;
+      if (closeTimer) window.clearTimeout(closeTimer);
+      modal.classList.remove('is-closing');
+      renderModal(false);
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      window.requestAnimationFrame(function(){
+        modal.classList.add('is-open');
+        if (closeBtn) closeBtn.focus();
+      });
+    }
+
+    function closeModal(){
+      if (!modal || !modal.classList.contains('is-open')) return;
+      if (closeTimer) window.clearTimeout(closeTimer);
+      modal.classList.add('is-closing');
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      closeTimer = window.setTimeout(function(){
+        modal.classList.remove('is-closing');
+        if (modalImg) {
+          modalImg.removeAttribute('src');
+          modalImg.alt = '';
+        }
+        if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+      }, 430);
+    }
+
+    function moveModal(direction){
+      if (!modalSlides.length) return;
+      modalIndex = (modalIndex + direction + modalSlides.length) % modalSlides.length;
+      renderModal(true);
+    }
+
+    if (modal) {
+      closeBtn && closeBtn.addEventListener('click', closeModal);
+      prevBtn && prevBtn.addEventListener('click', function(){ moveModal(-1); });
+      nextBtn && nextBtn.addEventListener('click', function(){ moveModal(1); });
+      modal.addEventListener('click', function(event){
+        if (event.target === modal) closeModal();
+      });
+      window.addEventListener('keydown', function(event){
+        if (!modal.classList.contains('is-open')) return;
+        if (event.key === 'Escape') closeModal();
+        if (event.key === 'ArrowLeft') moveModal(-1);
+        if (event.key === 'ArrowRight') moveModal(1);
+      });
+    }
+
+    carousels.forEach(function(card, cardIndex){
+      const slides = Array.from(card.querySelectorAll('.mt-carousel img'));
+      let index = 0;
+      let paused = false;
+      let timer = null;
+
+      if (slides.length < 2) return;
+
+      function render(){
+        slides.forEach(function(img, i){
+          img.classList.toggle('is-active', i === index);
+        });
+      }
+
+      function go(direction){
+        index = (index + direction + slides.length) % slides.length;
+        render();
+      }
+
+      function start(){
+        if (reduceMotion.matches || timer) return;
+        timer = window.setInterval(function(){
+          if (!paused) go(1);
+        }, 3600 + cardIndex * 450);
+      }
+
+      function stop(){
+        if (timer) window.clearInterval(timer);
+        timer = null;
+      }
+
+      card.addEventListener('click', function(event){
+        if (event.target.closest('a, button')) return;
+        openModal(card);
+      });
+      card.addEventListener('mouseenter', function(){ paused = true; });
+      card.addEventListener('mouseleave', function(){ paused = false; });
+      card.addEventListener('focusin', function(){ paused = true; });
+      card.addEventListener('focusout', function(){ paused = false; });
+
+      render();
+      start();
+      reduceMotion.addEventListener('change', function(){
+        stop();
+        if (!reduceMotion.matches) start();
+      });
+    });
+  })();
+
+  var _cl = document.getElementById('cartaLink');
+  if (_cl && _cl.getAttribute('href').indexOf('PEGAR-LINK') > -1) {
+    _cl.addEventListener('click', function(e){ e.preventDefault(); alert('La carta estará disponible muy pronto.'); });
+  }
+
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
 </body>
 </html>

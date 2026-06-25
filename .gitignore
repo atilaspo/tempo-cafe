@@ -1,9 +1,20 @@
 .DS_Store
 *.pdf
 Screenshot*
+**/Screenshot*
 LOGOTIPOS/
 PAPELERÍA/
 TIPOGRAFIAS/
 RECURSOS GRÁFICOS/
 PHOTO-*.jpg
-"Una pausa*"
+Una pausa*
+ChatGPT Image*
+node_modules/
+package.json
+package-lock.json
+skills-lock.json
+.claude/
+.codex/
+.agents/
+AGENTS.md
+assets/loader-*.png
