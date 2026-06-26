@@ -44,7 +44,7 @@ Esta historia de fondo es el alma del negocio: producción 100% propia, formaci�
 - **Dirección:** Gral. Juan Domingo Perón 1467, Buenos Aires
 - **Horario:** Lun–Vie 8 a 20 hs
 - **Instagram:** @tempocafe_
-- **WhatsApp:** pendiente de confirmar con Martu (usar placeholder por ahora)
+- **WhatsApp Martu:** +54 9 11 2460-3313 (`https://wa.me/5491124603313`)
 
 ### Servicios especiales
 - Catering
@@ -229,6 +229,6 @@ gh auth logout                  # IMPORTANTE: hacer esto al terminar para no afe
 - [x] Agregar foto de los dueños a sección Nosotros (`fotos/foto_pareja centrada.png`)
 - [x] Usar fotos reales en menú y servicios
 - [x] Copiar y usar ilustración del personaje (`assets/illustrations/personaje.png`)
-- [ ] Confirmar número de WhatsApp con Martu
+- [x] Confirmar número de WhatsApp con Martu: +54 9 11 2460-3313
 - [ ] Crear repo GitHub y deployar en Vercel
 - [ ] Hacer `gh auth logout` tras el deploy

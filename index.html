@@ -29,6 +29,8 @@
     --pad:clamp(22px, 5vw, 64px);
     --radius-pill:0;
     --radius-control:0;
+    --ease-out:cubic-bezier(.22,1,.36,1);
+    --ease-soft:cubic-bezier(.4,0,.2,1);
   }
 
   *{box-sizing:border-box;margin:0;padding:0}
@@ -163,6 +165,10 @@
     gap:5px;
     cursor:pointer;
     box-shadow:0 12px 30px -24px rgba(35,35,34,.6);
+  }
+  .nav .menu-toggle:focus-visible{
+    outline:1px solid var(--amber);
+    outline-offset:3px;
   }
   .menu-toggle span{
     width:20px;
@@ -357,7 +363,7 @@
     background:#fff;
     cursor:pointer;
     box-shadow:0 26px 60px -34px rgba(45,58,31,.58);
-    transition:transform .45s cubic-bezier(.4,0,.2,1), box-shadow .45s ease;
+    transition:transform .42s var(--ease-out), box-shadow .42s ease;
   }
   .mt-card:hover{transform:translateY(-8px);box-shadow:0 34px 76px -38px rgba(45,58,31,.7)}
   .mt-card::after{content:none}
@@ -379,7 +385,7 @@
     object-position:center;
     opacity:0;
     transform:none;
-    transition:opacity .55s ease;
+    transition:opacity .55s ease, transform .9s var(--ease-out), filter .9s ease;
   }
   .mt-carousel img.is-active{opacity:1;transform:none}
   .mt-card figcaption,
@@ -399,6 +405,7 @@
     border-radius:0;
     padding:12px 14px;
     box-shadow:0 16px 34px -30px rgba(35,35,34,.62);
+    transition:transform .32s var(--ease-out), border-color .32s ease, background-color .32s ease;
   }
   .mt-card figcaption strong,
   .taste-card figcaption strong{font-family:var(--serif);font-size:clamp(20px,2.1vw,28px);font-weight:400;line-height:1;color:var(--forest)}
@@ -415,13 +422,14 @@
     background:#fff;
     cursor:pointer;
     box-shadow:0 26px 60px -34px rgba(45,58,31,.58);
-    transition:transform .45s cubic-bezier(.4,0,.2,1), box-shadow .45s ease;
+    transition:transform .42s var(--ease-out), box-shadow .42s ease;
   }
   .taste-card:hover{transform:translateY(-6px);box-shadow:0 34px 76px -38px rgba(45,58,31,.7)}
   .taste-card::after{content:none}
   .btn-carta{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;
-    background:var(--amber);color:#fff;padding:18px 42px;border-radius:0;cursor:pointer;transition:all .3s ease;box-shadow:0 18px 38px -30px rgba(35,35,34,.7)}
+    background:var(--amber);color:#fff;padding:18px 42px;border-radius:0;cursor:pointer;transition:transform .22s var(--ease-out), background-color .22s ease, color .22s ease, box-shadow .22s ease;box-shadow:0 18px 38px -30px rgba(35,35,34,.7)}
   .btn-carta:hover{background:var(--forest);color:var(--cream);transform:translateY(-2px)}
+  .btn-carta:active{transform:translateY(0) scale(.985)}
   .btn-ghost-light{background:transparent;color:var(--cream);border:1px solid rgba(244,244,237,.34);padding:13px 22px;border-radius:0}
   .btn-ghost-light:hover{background:rgba(244,244,237,.08);border-color:var(--amber);color:var(--amber)}
 
@@ -565,6 +573,7 @@
   .menu-modal__dialog{
     position:relative;
     width:min(920px,calc(100vw - clamp(32px,6vw,96px)));
+    height:min(760px,88svh);
     max-height:min(780px,88svh);
     background:var(--cream);
     border:1px solid rgba(45,58,31,.14);
@@ -573,7 +582,9 @@
     box-shadow:
       0 34px 100px -38px rgba(0,0,0,.8),
       0 0 0 1px rgba(244,244,237,.24);
-    display:block;
+    display:grid;
+    grid-template-rows:minmax(0,1fr) auto;
+    gap:14px;
     padding:clamp(14px,2vw,22px);
     overflow:hidden;
     opacity:0;
@@ -599,14 +610,17 @@
     padding:0;
     border-radius:0;
     overflow:hidden;
+    width:100%;
+    height:100%;
     max-width:860px;
     margin:0 auto;
     box-shadow:0 18px 54px -42px rgba(45,58,31,.62);
+    min-height:0;
   }
   .menu-modal__media img{
     width:100%;
-    height:auto;
-    max-height:calc(88svh - 132px);
+    height:100%;
+    max-height:none;
     object-fit:contain;
     border-radius:0;
     display:block;
@@ -622,10 +636,7 @@
     transform:scale(.985);
   }
   .menu-modal__caption{
-    position:absolute;
-    left:clamp(36px,4vw,52px);
-    right:clamp(36px,4vw,52px);
-    bottom:clamp(34px,3.5vw,48px);
+    position:relative;
     z-index:3;
     display:flex;
     align-items:center;
@@ -637,6 +648,8 @@
     border:1px solid rgba(45,58,31,.12);
     border-radius:0;
     box-shadow:0 14px 34px -24px rgba(35,35,34,.5);
+    width:min(860px,100%);
+    margin:0 auto;
   }
   .menu-modal__title{font-family:var(--serif);font-size:clamp(24px,3vw,34px);line-height:1;color:var(--forest)}
   .menu-modal__tag{
@@ -737,7 +750,7 @@
     background:var(--cream-2);
     border:1px solid rgba(45,58,31,.18);
     color:var(--forest);
-    transition:transform .45s cubic-bezier(.4,0,.2,1), border-color .45s ease, box-shadow .45s ease, background .45s ease;
+    transition:transform .42s var(--ease-out), border-color .42s ease, box-shadow .42s ease, background .42s ease;
     overflow:hidden;
     display:flex;
     flex-direction:column;
@@ -752,7 +765,7 @@
     background:var(--amber);
     transform:scaleX(0);
     transform-origin:left;
-    transition:transform .55s cubic-bezier(.4,0,.2,1);
+    transition:transform .55s var(--ease-out);
   }
   .serv-card:hover{transform:translateY(-6px);border-color:rgba(191,130,51,.42);box-shadow:0 34px 76px -54px rgba(45,58,31,.78)}
   .serv-card:hover::before{transform:scaleX(1)}
@@ -761,7 +774,7 @@
   .serv-card p{font-size:17px;line-height:1.45;color:#5f6b55;font-weight:500;margin-bottom:34px;text-wrap:pretty;max-width:25ch;transition:color .35s ease}
   .serv-card:hover p{color:#3f4a35}
   .serv-photo-wrap{width:100%;height:172px;margin-top:auto;margin-bottom:28px;overflow:hidden;background:var(--cream-2);border:1px solid rgba(244,244,237,.18)}
-  .serv-photo{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s cubic-bezier(.4,0,.2,1), filter .7s ease}
+  .serv-photo{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--ease-out), filter .7s ease}
   .serv-card:hover .serv-photo{transform:scale(1.055);filter:saturate(1.06) contrast(1.03)}
   .serv-card .more{font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--amber);display:inline-flex;align-items:center;gap:12px;width:max-content;padding:10px 15px;border:1px solid rgba(191,130,51,.28);border-radius:0;background:transparent;transition:gap .25s ease, color .25s ease, background .25s ease, border-color .25s ease}
   .serv-card:hover .more{gap:17px;background:rgba(191,130,51,.08);border-color:rgba(191,130,51,.38)}
@@ -809,27 +822,66 @@
 
   /* ---------- REVEAL ---------- */
   [data-reveal]{
-    opacity:1;
-    transform:none;
+    --reveal-y:18px;
+    opacity:0;
+    transform:translate3d(0,var(--reveal-y),0);
+    transition:
+      opacity .72s var(--ease-out),
+      transform .72s var(--ease-out);
+    transition-delay:calc(var(--d, 0) * 70ms);
+  }
+  .mt-card[data-reveal]{
+    transition:
+      opacity .72s var(--ease-out),
+      transform .72s var(--ease-out),
+      box-shadow .42s ease;
+    transition-delay:calc(var(--d, 0) * 70ms);
   }
   #servicios .serv-card[data-reveal]{
     opacity:0;
     transform:translateY(22px);
-    transition:opacity .65s ease, transform .65s cubic-bezier(.4,0,.2,1), border-color .45s ease, box-shadow .45s ease, background .45s ease;
+    transition:opacity .68s var(--ease-out), transform .68s var(--ease-out), border-color .42s ease, box-shadow .42s ease, background .42s ease;
+    transition-delay:calc(var(--d, 0) * 80ms);
   }
   #servicios .serv-card[data-reveal].is-visible{opacity:1;transform:none}
   #servicios .serv-card[data-reveal].is-visible:hover{transform:translateY(-6px)}
   [data-d="1"]{--d:1}
   [data-d="2"]{--d:2}
   [data-d="3"]{--d:3}
-  #servicios .serv-card[data-d="1"]{transition-delay:.08s}
-  #servicios .serv-card[data-d="2"]{transition-delay:.16s}
   [data-reveal].is-visible{opacity:1;transform:none}
+  .about-photos[data-reveal][data-parallax]{
+    transform:translate3d(0,calc(var(--py) + var(--reveal-y)),0);
+  }
+  .about-photos[data-reveal][data-parallax].is-visible{
+    transform:translate3d(0,var(--py),0);
+  }
+  @media (hover:hover) and (pointer:fine){
+    .mt-card[data-reveal].is-visible:hover{
+      transform:translateY(-8px);
+      box-shadow:0 34px 76px -38px rgba(45,58,31,.7);
+    }
+    .mt-card:hover .mt-carousel img.is-active,
+    .taste-card:hover .mt-carousel img.is-active{
+      transform:scale(1.035);
+      filter:saturate(1.04) contrast(1.02);
+    }
+    .mt-card:hover figcaption,
+    .taste-card:hover figcaption{
+      transform:translateY(-3px);
+      border-color:rgba(191,130,51,.24);
+      background-color:#f8f7ef;
+    }
+    .mt-card:active,
+    .taste-card:active,
+    .serv-card:active{
+      transform:translateY(-2px) scale(.995);
+    }
+  }
   @media (prefers-reduced-motion: reduce){
     .scroll-cue .tempo-cue::before,.scroll-cue .tempo-cue::after{animation:none!important}
     .site-loader__personaje,.site-loader__line::before{animation:none!important}
     html{scroll-behavior:auto}
-    [data-reveal],.hero-inner,.scroll-cue,.nav,#servicios .serv-card{opacity:1!important;transform:none!important;transition:none!important}
+    [data-reveal],.hero-inner,.scroll-cue,.nav,#servicios .serv-card,.mt-carousel img,.serv-photo{opacity:1!important;transform:none!important;transition:none!important}
     [data-parallax]{--py:0px!important;will-change:auto}
   }
 
@@ -851,18 +903,42 @@
     .nav-links.is-open{
       display:flex;
       position:fixed;
-      inset:72px 16px auto 16px;
+      inset:78px 18px auto 18px;
+      z-index:70;
       flex-direction:column;
       align-items:stretch;
       gap:0;
-      padding:18px;
-      background:rgba(244,244,237,.82);
-      border:1px solid rgba(45,58,31,.14);
+      padding:0;
+      background:var(--cream);
+      border:1px solid rgba(45,58,31,.18);
       border-radius:var(--radius-control);
-      box-shadow:0 22px 50px -28px rgba(45,58,31,.55);
+      box-shadow:0 26px 70px -42px rgba(45,58,31,.85);
+      overflow:hidden;
     }
-    .nav-links.is-open a{width:100%;justify-content:center;text-align:center}
-    .nav-links.is-open a.link{padding:16px 0;border-bottom:1px solid rgba(45,58,31,.1)}
+    .nav-links.is-open a{
+      width:100%;
+      min-height:62px;
+      justify-content:center;
+      text-align:center;
+      box-shadow:none;
+      transform:none;
+    }
+    .nav-links.is-open a.link{
+      display:flex;
+      align-items:center;
+      padding:0;
+      border-bottom:1px solid rgba(45,58,31,.12);
+      opacity:1;
+    }
+    .nav-links.is-open a.link::after{display:none}
+    .nav-links.is-open .btn-amber{
+      width:auto;
+      min-height:56px;
+      margin:14px;
+      color:var(--cream);
+      background:var(--forest);
+      border:1px solid var(--forest);
+    }
     .nav .menu-toggle{display:flex}
     #menu{padding:30px 0 36px}
     .menu-head{gap:14px;margin-bottom:18px}
@@ -875,10 +951,10 @@
     .taste-card,.mt-card,.mt-card--hero,.mt-side .mt-card{min-height:178px}
     .menu-title__line{white-space:nowrap}
     .menu-modal{padding:14px}
-    .menu-modal__dialog{width:calc(100vw - 28px);max-height:88svh;border-radius:0;padding:14px}
-    .menu-modal__media{border-radius:0}
-    .menu-modal__media img{max-height:calc(88svh - 106px);border-radius:0}
-    .menu-modal__caption{left:22px;right:22px;bottom:22px;align-items:flex-start;flex-direction:column;gap:8px;padding:12px 14px;border-radius:0}
+    .menu-modal__dialog{width:calc(100vw - 28px);height:84svh;max-height:84svh;border-radius:0;padding:12px;gap:10px}
+    .menu-modal__media{height:100%;border-radius:0}
+    .menu-modal__media img{height:100%;max-height:none;border-radius:0}
+    .menu-modal__caption{align-items:flex-start;flex-direction:column;gap:8px;padding:11px 12px;border-radius:0}
     .menu-modal__tag{padding:7px 10px}
     .menu-modal__close{top:16px;right:16px;width:38px;height:38px}
     .menu-modal__nav{width:40px;height:40px;font-size:28px}
@@ -895,7 +971,7 @@
     .serv-photo-wrap{height:132px;margin-bottom:22px}
     .contact-title{white-space:normal}
     .sec-head{flex-direction:column;align-items:flex-start;gap:18px}
-    .eng-stamp,.eng-croissant,.eng-bread{display:none}
+    .eng-clock,.eng-stamp,.eng-croissant,.eng-bread{display:none}
     .foot-cols{gap:36px}
   }
 </style>
@@ -1068,24 +1144,24 @@
     </div>
 
     <div class="serv-grid">
-      <article class="serv-card" data-reveal>
+      <a class="serv-card" href="https://wa.me/5491124603313?text=Hola%20Martu%2C%20quiero%20consultar%20por%20catering%20de%20Tempo%20Caf%C3%A9." target="_blank" rel="noopener" data-reveal aria-label="Consultar por catering de Tempo Café por WhatsApp">
         <h4>Catering</h4>
         <p>Cocina dulce y salada, hecha el mismo día, para tu evento.</p>
         <div class="serv-photo-wrap"><img class="serv-photo" src="assets/servicios-catering.jpg" alt="Mesa de catering con bocados dulces y salados" /></div>
         <span class="more">Consultar <span aria-hidden="true">→</span></span>
-      </article>
-      <article class="serv-card" data-reveal data-d="1">
+      </a>
+      <a class="serv-card" href="https://wa.me/5491124603313?text=Hola%20Martu%2C%20quiero%20consultar%20por%20mesa%20dulce%20de%20Tempo%20Caf%C3%A9." target="_blank" rel="noopener" data-reveal data-d="1" aria-label="Consultar por mesa dulce de Tempo Café por WhatsApp">
         <h4>Mesa Dulce</h4>
         <p>Pastelería fina de autor para cumpleaños, casamientos y celebraciones.</p>
         <div class="serv-photo-wrap"><img class="serv-photo" src="assets/servicios-mesa-dulce.jpg" alt="Cupcakes y pastelería fina para mesa dulce" /></div>
         <span class="more">Consultar <span aria-hidden="true">→</span></span>
-      </article>
-      <article class="serv-card" data-reveal data-d="2">
+      </a>
+      <a class="serv-card" href="https://wa.me/5491124603313?text=Hola%20Martu%2C%20quiero%20consultar%20por%20desayunos%20corporativos%20de%20Tempo%20Caf%C3%A9." target="_blank" rel="noopener" data-reveal data-d="2" aria-label="Consultar por desayunos corporativos de Tempo Café por WhatsApp">
         <h4>Desayunos Corporativos</h4>
         <p>Café de especialidad y viandas para oficinas, reuniones y lanzamientos.</p>
         <div class="serv-photo-wrap"><img class="serv-photo" src="assets/servicios-desayunos.jpg" alt="Mesa con café, té y desayuno para reunión corporativa" /></div>
         <span class="more">Consultar <span aria-hidden="true">→</span></span>
-      </article>
+      </a>
     </div>
   </div>
 </section>
@@ -1104,13 +1180,13 @@
       <div class="con-info" data-reveal>
         <div class="con-line"><div class="k">Dirección</div><div class="v"><span class="em serif">Gral. J. D. Perón 1467</span><br/>Buenos Aires · Dentro de la academia de danza</div></div>
         <div class="con-line"><div class="k">Horarios</div><div class="v">Lunes a Viernes · 8:00 – 20:00 hs<br/>Modalidad take-away &amp; barra</div></div>
-        <div class="con-line"><div class="k">Pedidos</div><div class="v">Instagram <span class="em serif">@tempocafe_</span><br/>WhatsApp · a confirmar</div></div>
+        <div class="con-line"><div class="k">Pedidos</div><div class="v">Instagram <span class="em serif">@tempocafe_</span><br/>WhatsApp · <span class="em serif">+54 9 11 2460-3313</span></div></div>
         <div class="con-cta">
           <a href="https://instagram.com/tempocafe_" class="btn btn-amber" target="_blank" rel="noopener" aria-label="Instagram de Tempo Café">
             <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 2A3.8 3.8 0 0 0 4 7.8v8.4A3.8 3.8 0 0 0 7.8 20h8.4a3.8 3.8 0 0 0 3.8-3.8V7.8A3.8 3.8 0 0 0 16.2 4H7.8Zm8.95 1.65a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5ZM12 7.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8Zm0 2a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Z"/></svg>
             Instagram
           </a>
-          <a href="https://wa.me/" class="btn btn-ghost" target="_blank" rel="noopener" aria-label="WhatsApp de Tempo Café">
+          <a href="https://wa.me/5491124603313" class="btn btn-ghost" target="_blank" rel="noopener" aria-label="WhatsApp de Tempo Café">
             <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.04 2a9.9 9.9 0 0 1 8.42 15.11L21.8 22l-5.01-1.31A9.98 9.98 0 0 1 2.08 12 9.96 9.96 0 0 1 12.04 2Zm0 1.98A7.98 7.98 0 0 0 4.06 12a7.9 7.9 0 0 0 2.3 5.62l.34.34-.78 2.85 2.93-.77.33.2a7.97 7.97 0 0 0 10.88-3.06 7.9 7.9 0 0 0 .96-3.78 7.99 7.99 0 0 0-7.98-7.42Zm-3.44 3.9c.17 0 .35 0 .5.01.13 0 .37-.05.58.44.22.53.75 1.83.82 1.96.06.13.1.29.02.46-.08.17-.12.28-.25.43-.13.15-.27.34-.39.46-.13.13-.26.27-.11.53.15.26.67 1.1 1.44 1.78.99.88 1.82 1.15 2.08 1.28.26.13.41.11.56-.06.15-.17.65-.76.82-1.02.17-.26.34-.22.58-.13.24.09 1.53.72 1.79.85.26.13.44.19.5.3.06.11.06.62-.15 1.21-.21.59-1.23 1.13-1.72 1.17-.44.04-.99.06-1.6-.1-.37-.1-.84-.27-1.45-.53-2.55-1.1-4.21-3.66-4.34-3.83-.13-.17-1.04-1.38-1.04-2.64 0-1.26.66-1.88.89-2.14.24-.26.52-.33.7-.33Z"/></svg>
             WhatsApp
           </a>
@@ -1149,7 +1225,7 @@
       <div class="foot-col">
         <h5>Seguinos</h5>
         <a href="https://instagram.com/tempocafe_" target="_blank" rel="noopener">Instagram @tempocafe_</a>
-        <a href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://wa.me/5491124603313" target="_blank" rel="noopener">WhatsApp</a>
       </div>
     </div>
   </div>
